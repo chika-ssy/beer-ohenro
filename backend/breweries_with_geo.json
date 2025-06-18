@@ -1,0 +1,389 @@
+[
+  {
+    "id": "ブランド名",
+    "brand": "ブランド名",
+    "pub": "ブルーパブ名",
+    "company": "製造元・企画元",
+    "address": "所在地",
+    "lat": "○○○○",
+    "lng": "○○○○"
+  },
+  {
+    "id": "福繁食品",
+    "brand": "福繁食品",
+    "pub": "遊撃ビールスタンド",
+    "company": "(同)スズシゲカンパニー",
+    "address": "香川県東かがわ市",
+    "lat": 34.243727,
+    "lng": 134.358959
+  },
+  {
+    "id": "swallows_nest_brewing",
+    "brand": "SWALLOWS NEST BREWING",
+    "pub": "［パブなし］",
+    "company": "(同)五名醸造",
+    "address": "香川県東かがわ市",
+    "lat": 34.243727,
+    "lng": 134.358959
+  },
+  {
+    "id": "まめまめびーる",
+    "brand": "まめまめびーる",
+    "pub": "まめまめびーる",
+    "company": "(同)ナカタ",
+    "address": "香川県小豆島町",
+    "lat": 34.4818325,
+    "lng": 134.2336123
+  },
+  {
+    "id": "setouchiudon_brewing",
+    "brand": "SETOUCHIUDON BREWING",
+    "pub": "リバーサイド351",
+    "company": "(株)瀬戸内",
+    "address": "香川県高松市",
+    "lat": 34.342542,
+    "lng": 134.0465405
+  },
+  {
+    "id": "しろすずめ",
+    "brand": "しろすずめ",
+    "pub": "とりかご",
+    "company": "(同)白雀",
+    "address": "香川県高松市",
+    "lat": 34.342542,
+    "lng": 134.0465405
+  },
+  {
+    "id": "讃州麦酒さぬきビール",
+    "brand": "讃州麦酒さぬきビール",
+    "pub": "［パブなし］",
+    "company": "(株)レグザム",
+    "address": "香川県高松市",
+    "lat": 34.342542,
+    "lng": 134.0465405
+  },
+  {
+    "id": "王越麦酒醸造所",
+    "brand": "王越麦酒醸造所",
+    "pub": "［パブなし］",
+    "company": "(株)ｳｴｽﾄﾌｰﾄﾞﾌﾟﾗﾝﾆﾝｸﾞ",
+    "address": "香川県坂出市",
+    "lat": 34.316426,
+    "lng": 133.8604948
+  },
+  {
+    "id": "呑象ブリューイング",
+    "brand": "呑象ブリューイング",
+    "pub": "呑象ブリューイング",
+    "company": "(株)地方創生",
+    "address": "香川県琴平町",
+    "lat": 34.1914394,
+    "lng": 133.823306
+  },
+  {
+    "id": "miroc_beer",
+    "brand": "MIROC　BEER",
+    "pub": "MIROC　BREWERY",
+    "company": "(株)ドットライン",
+    "address": "香川県丸亀市",
+    "lat": 34.2893547,
+    "lng": 133.797643
+  },
+  {
+    "id": "久福ブルーイング本島",
+    "brand": "久福ブルーイング本島",
+    "pub": "［パブなし］",
+    "company": "(同)久福",
+    "address": "香川県丸亀市",
+    "lat": 34.2893547,
+    "lng": 133.797643
+  },
+  {
+    "id": "koki_brewing_mitoyo",
+    "brand": "KOKI BREWING MITOYO",
+    "pub": "みんなでブルワリー",
+    "company": "(株)KOKI BREWING MITOYO",
+    "address": "香川県三豊市",
+    "lat": 34.1825338,
+    "lng": 133.7151175
+  },
+  {
+    "id": "kanonji_brewing",
+    "brand": "KANONJI BREWING",
+    "pub": "KANONJI BREWING",
+    "company": "KANONJI BREWING",
+    "address": "香川県観音寺市",
+    "lat": 34.1284357,
+    "lng": 133.6628477
+  },
+  {
+    "id": "ブランド名",
+    "brand": "ブランド名",
+    "pub": "ブルーパブ名",
+    "company": "製造元・企画元",
+    "address": "所在地",
+    "lat": "○○○○",
+    "lng": "○○○○"
+  },
+  {
+    "id": "梅錦ビール",
+    "brand": "梅錦ビール",
+    "pub": "［パブなし］",
+    "company": "梅錦山川(株)",
+    "address": "愛媛県丹原町",
+    "lat": 33.9044362,
+    "lng": 133.0634987
+  },
+  {
+    "id": "niihama_brewery",
+    "brand": "Niihama Brewery",
+    "pub": "［パブなし］",
+    "company": "愛媛果汁食品(株)",
+    "address": "愛媛県新居浜市",
+    "lat": 33.9602876,
+    "lng": 133.2833918
+  },
+  {
+    "id": "groundtap_brewery",
+    "brand": "GROUNDTAP BREWERY",
+    "pub": "GROUNDTAP BREWERY",
+    "company": "(株)ダイテック",
+    "address": "愛媛県西条市",
+    "lat": 33.919495,
+    "lng": 133.1811444
+  },
+  {
+    "id": "大三島ブリュワリー",
+    "brand": "大三島ブリュワリー",
+    "pub": "ビアカフェ",
+    "company": "大三島ブリュワリー(同)",
+    "address": "愛媛県今治市",
+    "lat": 34.0662024,
+    "lng": 132.9977906
+  },
+  {
+    "id": "今治街中麦酒",
+    "brand": "今治街中麦酒",
+    "pub": "今治街中麦酒",
+    "company": "(株)ありがとうサービス",
+    "address": "愛媛県今治市",
+    "lat": 34.0662024,
+    "lng": 132.9977906
+  },
+  {
+    "id": "道後ビール",
+    "brand": "道後ビール",
+    "pub": "道後麦酒館",
+    "company": "水口酒造(株)",
+    "address": "愛媛県松山市",
+    "lat": 33.8355117,
+    "lng": 132.7639923
+  },
+  {
+    "id": "hojo_brewing_&_stays",
+    "brand": "HOJO Brewing & Stays",
+    "pub": "HOJO Brewing & Stays",
+    "company": "(株)ＫＩＲＩ",
+    "address": "愛媛県松山市",
+    "lat": 33.8355117,
+    "lng": 132.7639923
+  },
+  {
+    "id": "dd4d_brewing",
+    "brand": "DD4D BREWING",
+    "pub": "DD4D BREWING & CLOTHING STORE",
+    "company": "(株)JAPANDEMIC COMPANY",
+    "address": "愛媛県松山市",
+    "lat": 33.8355117,
+    "lng": 132.7639923
+  },
+  {
+    "id": "麦宿_伝_guest_house_brew",
+    "brand": "麦宿 伝 Guest House Brew",
+    "pub": "麦宿 伝 Guest House Brew",
+    "company": "麦宿 伝 Guest House Brew",
+    "address": "愛媛県松山市",
+    "lat": 33.8355117,
+    "lng": 132.7639923
+  },
+  {
+    "id": "gogoshima_beer_farm",
+    "brand": "gogoshima beer farm",
+    "pub": "gogoshima beer farm",
+    "company": "ごごしまビアファーム(同)",
+    "address": "愛媛県松山市",
+    "lat": 33.8355117,
+    "lng": 132.7639923
+  },
+  {
+    "id": "臥龍醸造_garyu_brewing",
+    "brand": "臥龍醸造 GARYU BREWING",
+    "pub": "臥龍醸造 GARYU BREWING",
+    "company": "(株)アライ",
+    "address": "愛媛県大洲市",
+    "lat": 33.5061905,
+    "lng": 132.5446184
+  },
+  {
+    "id": "ブランド名",
+    "brand": "ブランド名",
+    "pub": "ブルーパブ名",
+    "company": "製造元・企画元",
+    "address": "所在地",
+    "lat": "○○○○",
+    "lng": "○○○○"
+  },
+  {
+    "id": "ｔｏｓａｃｏ",
+    "brand": "ＴＯＳＡＣＯ",
+    "pub": "TOSACO TAP STAND",
+    "company": "(同)高知ｶﾝﾊﾟｰﾆｭﾌﾞﾙﾜﾘｰ",
+    "address": "高知県香美市",
+    "lat": 33.6037533,
+    "lng": 133.686005
+  },
+  {
+    "id": "ｔｏｓａｃｏ",
+    "brand": "ＴＯＳＡＣＯ",
+    "pub": "［パブなし］［醸造所移転］",
+    "company": "(同)高知ｶﾝﾊﾟｰﾆｭﾌﾞﾙﾜﾘｰ",
+    "address": "高知県香美市",
+    "lat": 33.6037533,
+    "lng": 133.686005
+  },
+  {
+    "id": "山本麦酒",
+    "brand": "山本麦酒",
+    "pub": "カフェジュエル　ケーニッヒ",
+    "company": "(株)山本商事",
+    "address": "高知県南国市",
+    "lat": 33.575688,
+    "lng": 133.6414203
+  },
+  {
+    "id": "wayfarer_brewing_company",
+    "brand": "Wayfarer Brewing Company",
+    "pub": "Wayfarer Brewing Company",
+    "company": "(同)Wayfarer",
+    "address": "高知県南国市",
+    "lat": 33.575688,
+    "lng": 133.6414203
+  },
+  {
+    "id": "south_horizon_brewing",
+    "brand": "South Horizon Brewing",
+    "pub": "South Horizon Brewing",
+    "company": "(株)CHOKA'S",
+    "address": "高知県高知市",
+    "lat": 33.5588821,
+    "lng": 133.5312383
+  },
+  {
+    "id": "mukai_craft_brewing",
+    "brand": "MUKAI CRAFT BREWING",
+    "pub": "BLUE BREW",
+    "company": "MUKAI CRAFT BREWING(株)",
+    "address": "高知県仁淀川町",
+    "lat": 33.5752059,
+    "lng": 133.1686229
+  },
+  {
+    "id": "ブランド名",
+    "brand": "ブランド名",
+    "pub": "ブルーパブ名",
+    "company": "製造元・企画元",
+    "address": "所在地",
+    "lat": "○○○○",
+    "lng": "○○○○"
+  },
+  {
+    "id": "t.s.brewery",
+    "brand": "T.S.Brewery",
+    "pub": "徳島ステーションブリュワリー",
+    "company": "(株)阿波麦酒",
+    "address": "徳島県徳島市",
+    "lat": 34.0703652,
+    "lng": 134.5549537
+  },
+  {
+    "id": "阿波麦酒",
+    "brand": "阿波麦酒",
+    "pub": "［パブなし］",
+    "company": "(株)阿波麦酒　藍住工場",
+    "address": "徳島県藍住町",
+    "lat": 34.1262062,
+    "lng": 134.4957967
+  },
+  {
+    "id": "あらたえエール",
+    "brand": "あらたえエール",
+    "pub": "シナジーダイニング郷里",
+    "company": "ノヴィルフロンティア(株)",
+    "address": "徳島県徳島市",
+    "lat": 34.0703652,
+    "lng": 134.5549537
+  },
+  {
+    "id": "2nd_story_ale_works",
+    "brand": "2nd Story Ale Works",
+    "pub": "2nd Story Ale Works",
+    "company": "2nd Story Ale Works",
+    "address": "徳島県徳島市",
+    "lat": 34.0703652,
+    "lng": 134.5549537
+  },
+  {
+    "id": "2nd_story_ale_works",
+    "brand": "2nd Story Ale Works",
+    "pub": "［パブなし］［移転］",
+    "company": "2nd Story Ale Works",
+    "address": "徳島県徳島市",
+    "lat": 34.0703652,
+    "lng": 134.5549537
+  },
+  {
+    "id": "日和佐ビール",
+    "brand": "日和佐ビール",
+    "pub": "［パブなし］",
+    "company": "日和佐ビール(同)",
+    "address": "徳島県美波町",
+    "lat": 33.7345546,
+    "lng": 134.5355415
+  },
+  {
+    "id": "kamikatzビール",
+    "brand": "KAMIKATZビール",
+    "pub": "RISE & WIN Brewing Co.BBQ & General Store",
+    "company": "(株)スペック",
+    "address": "徳島県上勝町",
+    "lat": 33.8891631,
+    "lng": 134.4019661
+  },
+  {
+    "id": "kamikatzビール",
+    "brand": "KAMIKATZビール",
+    "pub": "RISE & WIN Brewing Co.第２工場ｲﾝﾃﾞｨｺﾞﾀﾜｰ ﾃｲｽﾃｨﾝｸﾞｻﾛﾝ",
+    "company": "(株)スペック",
+    "address": "徳島県上勝町",
+    "lat": 33.8891631,
+    "lng": 134.4019661
+  },
+  {
+    "id": "kamiyama_beer_project",
+    "brand": "KAMIYAMA BEER PROJECT",
+    "pub": "KAMIYAMA BEER PROJECTタップルーム",
+    "company": "KAMIYAMA BEER PROJECT(同)",
+    "address": "徳島県神山町",
+    "lat": 33.9672275,
+    "lng": 134.3504705
+  },
+  {
+    "id": "paddle_brew",
+    "brand": "PADDLE BREW",
+    "pub": "［パブなし］",
+    "company": "(株)パドルブリュー",
+    "address": "徳島県美馬市",
+    "lat": 34.0533582,
+    "lng": 134.169914
+  }
+]
