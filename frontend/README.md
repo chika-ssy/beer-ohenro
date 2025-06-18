@@ -25,7 +25,7 @@ bun dev
 プロジェクトをローカルで実行するには、`frontend/` ディレクトリに `.env.local` ファイルを作成し、以下の内容を入力します:
 
 ```env
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=あなたのAPIキー
 ```
 
 ## さらに詳しく

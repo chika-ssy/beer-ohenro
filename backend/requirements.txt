@@ -1,1 +1,3 @@
-fastapi 
+Python
+FastAPI
+Uvicorn
