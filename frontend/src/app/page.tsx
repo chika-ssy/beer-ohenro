@@ -16,19 +16,30 @@ type UserLocation = {
 export default function Home() {
   const [breweries, setBreweries] = useState<Brewery[]>([]);
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
-
   // ブルワリーデータの取得
   useEffect(() => {
-    fetch('http://localhost:8000/api/breweries')
+    fetch('http://localhost:8000/api/breweries') // FastAPI から brewery 情報を取得
       .then((res) => res.json())
       .then((data) => {
-        const validData = data.filter(
-          (b: Brewery) =>
-            typeof b.latitude === 'number' &&
-            typeof b.longitude === 'number' &&
-            !isNaN(b.latitude) &&
-            !isNaN(b.longitude)
-        );
+        const validData = data
+          // ダミーデータ（例: "ブランド名" というIDのもの）を除外
+          .filter((b: any) => b.id !== 'ブランド名')
+          // 必要な情報を整形・数値化（lat/lngは文字列で来ることがあるため）
+          .map((b: any) => ({
+            name: b.brand || b.name,  // brand または name を優先して表示
+            latitude: parseFloat(b.lat || b.latitude),
+            longitude: parseFloat(b.lng || b.longitude),
+          }))
+          // 緯度経度が有効な数値であるものだけを抽出
+          .filter(
+            (b: Brewery) =>
+              typeof b.latitude === 'number' &&
+              typeof b.longitude === 'number' &&
+              !isNaN(b.latitude) &&
+              !isNaN(b.longitude)
+          );
+
+        // 最終的なデータを state にセット
         setBreweries(validData);
       })
       .catch((err) => console.error('Error fetching breweries:', err));
@@ -39,6 +50,7 @@ export default function Home() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          // 緯度経度を state に保存
           setUserLocation({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -52,20 +64,4 @@ export default function Home() {
       console.error('Geolocation API はこのブラウザでサポートされていません');
     }
   }, []);
-
-  return (
-    <div>
-      <h1>ブルワリー一覧</h1>
-      <ul>
-        {breweries.map((brewery, index) => (
-          <li key={`${brewery.name}-${index}`}>
-            {brewery.name}（{brewery.latitude}, {brewery.longitude}）
-          </li>
-        ))}
-      </ul>
-
-      {/* 地図に現在地を渡す */}
-      <BreweryMap breweries={breweries} userLocation={userLocation} />
-    </div>
-  );
 }

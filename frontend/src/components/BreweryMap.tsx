@@ -15,7 +15,7 @@ type UserLocation = {
 
 type Props = {
   breweries: Brewery[];
-  userLocation?: UserLocation | null;  // 現在地を受け取る
+  userLocation: UserLocation | null;  // 現在地を取得
 };
 
 const containerStyle = {
@@ -26,9 +26,9 @@ const containerStyle = {
 export default function BreweryMap({ breweries, userLocation }: Props) {
   const center = useMemo(() => {
     if (userLocation) {
-      return userLocation;
+      return { lat: userLocation.lat, lng: userLocation.lng };
     }
-    return { lat: 34.3428, lng: 134.0466 }; // 高松市（デフォルト中心）
+    return { lat: 34.3428, lng: 134.0466 }; // デフォルト: 高松市
   }, [userLocation]);
 
   const { isLoaded } = useJsApiLoader({
@@ -38,11 +38,11 @@ export default function BreweryMap({ breweries, userLocation }: Props) {
   if (!isLoaded) return <p>Loading Map...</p>;
 
   return (
-    <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={8}>
-      {/* ユーザーの現在地をマーカー表示 */}
+    <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
+      {/* 現在地マーカー */}
       {userLocation && (
         <Marker
-          position={userLocation}
+          position={{ lat: userLocation.lat, lng: userLocation.lng }}
           title="あなたの現在地"
           icon={{
             url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
