@@ -24,40 +24,38 @@ const containerStyle = {
 };
 
 export default function BreweryMap({ breweries, userLocation }: Props) {
-  const center = useMemo(() => {
-    if (userLocation) {
-      return { lat: userLocation.lat, lng: userLocation.lng };
-    }
-    return { lat: 34.3428, lng: 134.0466 }; // デフォルト: 高松市
-  }, [userLocation]);
-
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
   });
 
-  if (!isLoaded) return <p>Loading Map...</p>;
+  const center = useMemo(() => {
+    return userLocation || { lat: 34.3428, lng: 134.0466 }; // ← 現在地があれば優先(デフォルト:高松市)
+  }, [userLocation]);
 
-  return (
-    <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
-      {/* 現在地マーカー */}
-      {userLocation && (
-        <Marker
-          position={{ lat: userLocation.lat, lng: userLocation.lng }}
-          title="あなたの現在地"
-          icon={{
-            url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-          }}
-        />
-      )}
+  if (!isLoaded) 
+    return <p>Loading Map...</p>;
 
-      {/* ブルワリーマーカー */}
-      {breweries.map((brewery, i) => (
-        <Marker
-          key={`${brewery.name}-${i}`}
-          position={{ lat: brewery.latitude, lng: brewery.longitude }}
-          title={brewery.name}
-        />
-      ))}
-    </GoogleMap>
-  );
+    return (
+      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
+        {/* 現在地マーカー */}
+        {userLocation && (
+          <Marker
+            position={userLocation}
+            title="現在地"
+            icon={{
+              url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+            }}
+          />
+        )}
+
+        {/* ブルワリーマーカー */}
+        {breweries.map((brewery, index) => (
+          <Marker
+            key={`${brewery.name}-${index}`}
+            position={{ lat: brewery.latitude, lng: brewery.longitude }}
+            title={brewery.name}
+          />
+        ))}
+      </GoogleMap>
+    );
 }

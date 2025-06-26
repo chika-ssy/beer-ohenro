@@ -25,10 +25,10 @@ export default function Home() {
           // ダミーデータ（例: "ブランド名" というIDのもの）を除外
           .filter((b: any) => b.id !== 'ブランド名')
           // 必要な情報を整形・数値化（lat/lngは文字列で来ることがあるため）
-          .map((b: any) => ({
-            name: b.brand || b.name,  // brand または name を優先して表示
-            latitude: parseFloat(b.lat || b.latitude),
-            longitude: parseFloat(b.lng || b.longitude),
+          .map((b: any, index: number) => ({
+            name: (b.brand || b.name || `不明${index}`) + `_${index}`, // ← 重複防止
+            latitude: parseFloat(b.lat || b.latitude || 'NaN'),
+            longitude: parseFloat(b.lng || b.longitude || 'NaN'),
           }))
           // 緯度経度が有効な数値であるものだけを抽出
           .filter(
@@ -40,7 +40,9 @@ export default function Home() {
           );
 
         // 最終的なデータを state にセット
+        console.log(validData);
         setBreweries(validData);
+
       })
       .catch((err) => console.error('Error fetching breweries:', err));
   }, []);
@@ -64,4 +66,19 @@ export default function Home() {
       console.error('Geolocation API はこのブラウザでサポートされていません');
     }
   }, []);
+
+  return (
+    <div>
+      <h1>ブルワリー一覧</h1>
+      <ul>
+        {breweries.map((brewery, index) => (
+          <li key={`${brewery.name}-${index}`}>
+            {brewery.name}（{brewery.latitude}, {brewery.longitude}）
+          </li>
+        ))}
+      </ul>
+      {/* 地図に現在地を渡す */}
+      <BreweryMap breweries={breweries} userLocation={userLocation} />
+    </div>
+  );
 }
