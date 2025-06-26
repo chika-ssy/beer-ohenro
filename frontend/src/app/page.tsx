@@ -1,3 +1,5 @@
+'use client';
+
 import Image from "next/image";
 import { useEffect, useState } from 'react';
 import BreweryMap from '@/components/BreweryMap';
@@ -77,6 +79,7 @@ export default function Home() {
           </li>
         ))}
       </ul>
+      
       {/* 地図に現在地を渡す */}
       <BreweryMap breweries={breweries} userLocation={userLocation} />
     </div>
