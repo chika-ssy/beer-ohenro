@@ -1,5 +1,6 @@
 import chardet
 from bs4 import BeautifulSoup
+import json
 
 # HTMLファイルのパス
 file_path = "shikoku_beer.html"
@@ -19,6 +20,11 @@ rows = soup.select("tr[valign='top']")
 for row in rows:
     cols = row.find_all("td")
     if len(cols) == 4:
+        # ✅ 表のヘッダー行を除外
+        if cols[0].get_text(strip=True) == "ブランド名":
+            continue
+
+        # ✅ 閉店等を除外
         if any(mark in str(row) for mark in ["閉店", "閉園", "醸造終了"]):
             continue
 
@@ -39,7 +45,6 @@ for row in rows:
         })
 
 # 4. JSONファイルに保存（例: breweries.json）
-import json
 with open("breweries.json", "w", encoding="utf-8") as f:
     json.dump(breweries, f, ensure_ascii=False, indent=2)
 

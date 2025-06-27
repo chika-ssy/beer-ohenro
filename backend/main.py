@@ -27,3 +27,5 @@ with open("beer_scraper/breweries.json", "r", encoding="utf-8") as json_file:
 @app.get("/beers")
 def read_beers():
     return JSONResponse(content=beer_data)
+
+print("jsonデータを読み込みました。")
