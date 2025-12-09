@@ -9,25 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@react-google-maps/api": "^2.20.7",
-    "next": "^15.5.6",
-=======
-    "@react-google-maps/api": "^2.20.6",
-    "next": "15.3.3",
->>>>>>> 69074f77765be510ee85879d4ef2720a10f963de
+    "@react-google-maps/api": "^2.20.3",
+    "next": "15.5.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.3.3",
-    "tailwindcss": "^4",
+    "eslint-config-next": "15.5.6",
     "typescript": "^5"
   }
 }
