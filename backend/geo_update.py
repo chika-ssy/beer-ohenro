@@ -10,7 +10,11 @@ API_KEY = os.getenv("GOOGLE_API_KEY")
 
 def geocode(brewery):
     # ブランド名やパブ名を住所に加えて精度を上げる
+<<<<<<< HEAD
     pub_clean = brewery['pub'].replace('パブなし', '').strip()
+=======
+    pub_clean = brewery['pub'].replace('［パブなし］', '').strip()
+>>>>>>> 69074f77765be510ee85879d4ef2720a10f963de
     address = f"{brewery['address']} {pub_clean} {brewery['brand']}, Japan"
     url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {"address": address, "key": API_KEY}

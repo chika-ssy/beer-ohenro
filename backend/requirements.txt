@@ -1,3 +1,7 @@
+<<<<<<< HEAD
 #Python
+=======
+Python
+>>>>>>> 69074f77765be510ee85879d4ef2720a10f963de
 FastAPI
 Uvicorn

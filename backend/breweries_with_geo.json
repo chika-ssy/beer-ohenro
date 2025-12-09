@@ -6,48 +6,34 @@
     "company": "(同)スズシゲカンパニー",
     "address": "日本、香川県東かがわ市",
     "lat": 34.243727,
-    "lng": 134.358959,
-    "url": "https://www.facebook.com/fukushigesyokuhin/"
+    "lng": 134.358959
   },
   {
     "id": "swallows_nest_brewing",
     "brand": "SWALLOWS NEST BREWING",
     "pub": "［パブなし］",
     "company": "(同)五名醸造",
-    "address": "日本、香川県東かがわ市",
-    "lat": 34.243727,
-    "lng": 134.358959,
-    "url":"https://www.facebook.com/GomyoBrewingLLC/"
+    "address": "香川県東かがわ市",
+    "lat": 34.2046977,
+    "lng": 134.1996197
   },
   {
     "id": "まめまめびーる",
     "brand": "まめまめびーる",
     "pub": "まめまめびーる",
     "company": "(同)ナカタ",
-    "address": "日本、〒761-4425 香川県小豆郡小豆島町坂手甲769",
+    "address": "香川県小豆島町",
     "lat": 34.4578974,
-    "lng": 134.3250363,
-    "url": "https://www.facebook.com/mamemamebeer.shodoshima/"
-  },
-  {
-    "id": "Teshima Factory",
-    "brand": "Teshima Factory",
-    "pub": "Teshima Factory",
-    "company": "(株)アミューズ",
-    "address": "日本、〒761-4661 〒761-4661 香川県小豆郡土庄町豊島家浦８８９",
-    "lat": 34.4899542,
-    "lng": 134.0607471,
-    "url": "https://www.instagram.com/teshimafactory/"
+    "lng": 134.3224614
   },
   {
     "id": "setouchiudon_brewing",
     "brand": "SETOUCHIUDON BREWING",
     "pub": "リバーサイド351",
     "company": "(株)瀬戸内",
-    "address": "日本、〒760-0068 香川県高松市松島町３丁目５−１",
+    "address": "香川県高松市",
     "lat": 34.338822,
-    "lng": 134.0689459,
-    "url": "https://setouchi-beer.com/"
+    "lng": 134.066371
   },
   {
     "id": "しろすずめ",
@@ -56,28 +42,25 @@
     "company": "(同)白雀",
     "address": "日本、〒760-0063 香川県高松市多賀町２丁目１７−１１",
     "lat": 34.3353385,
-    "lng": 134.0594139,
-    "url": "https://www.instagram.com/shirosuzume.llc/?hl=ja"
+    "lng": 134.0594139
   },
   {
     "id": "讃州麦酒さぬきビール",
     "brand": "讃州麦酒さぬきビール",
     "pub": "［パブなし］",
     "company": "(株)レグザム",
-    "address": "日本、香川県高松市",
-    "lat": 34.342542,
-    "lng": 134.0465405,
-    "url": "https://www.sanuki-beer.com/"
+    "address": "香川県高松市",
+    "lat": 34.2708596,
+    "lng": 134.0288267
   },
   {
     "id": "王越麦酒醸造所",
     "brand": "王越麦酒醸造所",
     "pub": "［パブなし］",
     "company": "(株)ｳｴｽﾄﾌｰﾄﾞﾌﾟﾗﾝﾆﾝｸﾞ",
-    "address": "日本、〒769-0102 香川県高松市加茂町",
-    "lat": 34.3057752,
-    "lng": 133.9316573,
-    "url": "https://www.instagram.com/ohgoshi__beer/"
+    "address": "香川県坂出市",
+    "lat": 34.366479,
+    "lng": 133.9089937
   },
   {
     "id": "呑象ブリューイング",
@@ -86,8 +69,7 @@
     "company": "(株)地方創生",
     "address": "日本、〒766-0002 香川県仲多度郡琴平町１８２−２",
     "lat": 34.1889887,
-    "lng": 133.8219042,
-    "url": "https://www.instagram.com/donzo_brewing/"
+    "lng": 133.8219042
   },
   {
     "id": "miroc_beer",
@@ -96,18 +78,16 @@
     "company": "(株)ドットライン",
     "address": "日本、〒763-0015 香川県丸亀市北平山町２丁目５−１５",
     "lat": 34.2964926,
-    "lng": 133.7966189,
-    "url": "https://www.instagram.com/mirocbeer/"
+    "lng": 133.7966189
   },
   {
     "id": "久福ブルーイング本島",
     "brand": "久福ブルーイング本島",
     "pub": "［パブなし］",
     "company": "(同)久福",
-    "address": "日本、香川県丸亀市",
-    "lat": 34.2893547,
-    "lng": 133.797643,
-    "url": "https://www.instagram.com/kyufuku_brewing_honjima/"
+    "address": "日本、〒763-0223 香川県丸亀市本島町泊７０４−２",
+    "lat": 34.3815222,
+    "lng": 133.7787426
   },
   {
     "id": "koki_brewing_mitoyo",
@@ -116,8 +96,7 @@
     "company": "(株)KOKI BREWING MITOYO",
     "address": "日本、〒769-1407 香川県三豊市仁尾町仁尾丁１９８−１",
     "lat": 34.1986954,
-    "lng": 133.6474087,
-    "url": "https://www.instagram.com/minnade_brewery/"
+    "lng": 133.6474087
   },
   {
     "id": "kanonji_brewing",
@@ -126,8 +105,7 @@
     "company": "KANONJI BREWING",
     "address": "日本、〒768-0076 香川県観音寺市港町１丁目６−１７",
     "lat": 34.1259364,
-    "lng": 133.6357289,
-    "url": "https://www.instagram.com/kanonji_brewing/"
+    "lng": 133.6357289
   },
   {
     "id": "梅錦ビール",
@@ -136,17 +114,16 @@
     "company": "梅錦山川(株)",
     "address": "日本、〒791-0510 愛媛県西条市丹原町丹原",
     "lat": 33.9044362,
-    "lng": 133.0634987,
-    "url": "https://www.instagram.com/umenishiki_yamakawa/"
+    "lng": 133.0634987
   },
   {
     "id": "niihama_brewery",
     "brand": "Niihama Brewery",
     "pub": "［パブなし］",
     "company": "愛媛果汁食品(株)",
-    "address": "日本、愛媛県新居浜市",
-    "lat": 33.9602876,
-    "lng": 133.2833918
+    "address": "日本、〒792-0828 愛媛県新居浜市松原町１−２１",
+    "lat": 33.941631,
+    "lng": 133.2969568
   },
   {
     "id": "groundtap_brewery",
@@ -162,9 +139,9 @@
     "brand": "大三島ブリュワリー",
     "pub": "ビアカフェ",
     "company": "大三島ブリュワリー(同)",
-    "address": "日本、愛媛県今治市",
-    "lat": 34.0662024,
-    "lng": 132.9977906
+    "address": "愛媛県今治市",
+    "lat": 34.2479758,
+    "lng": 132.9952001
   },
   {
     "id": "今治街中麦酒",
@@ -189,9 +166,9 @@
     "brand": "HOJO Brewing & Stays",
     "pub": "HOJO Brewing & Stays",
     "company": "(株)ＫＩＲＩ",
-    "address": "日本、〒799-2407 愛媛県松山市下難波甲32番70",
+    "address": "愛媛県松山市",
     "lat": 33.9850348,
-    "lng": 132.7730802
+    "lng": 132.7705053
   },
   {
     "id": "dd4d_brewing",
@@ -243,9 +220,9 @@
     "brand": "山本麦酒",
     "pub": "カフェジュエル　ケーニッヒ",
     "company": "(株)山本商事",
-    "address": "日本、〒780-0062 高知県高知市新本町２丁目１３−６２",
+    "address": "高知県南国市",
     "lat": 33.568808,
-    "lng": 133.5454951
+    "lng": 133.5429202
   },
   {
     "id": "wayfarer_brewing_company",
@@ -288,9 +265,9 @@
     "brand": "阿波麦酒",
     "pub": "［パブなし］",
     "company": "(株)阿波麦酒　藍住工場",
-    "address": "日本、徳島県板野郡藍住町",
-    "lat": 34.1262062,
-    "lng": 134.4957967
+    "address": "日本、〒771-1271 徳島県板野郡藍住町勝瑞幸島93−５",
+    "lat": 34.1216358,
+    "lng": 134.5144041
   },
   {
     "id": "あらたえエール",
@@ -306,18 +283,18 @@
     "brand": "2nd Story Ale Works",
     "pub": "2nd Story Ale Works",
     "company": "2nd Story Ale Works",
-    "address": "日本、〒771-4266 徳島県徳島市八多町南曽根１３−１",
-    "lat": 33.99365179999999,
-    "lng": 134.5207442
+    "address": "徳島県徳島市",
+    "lat": 33.9936518,
+    "lng": 134.5181693
   },
   {
     "id": "日和佐ビール",
     "brand": "日和佐ビール",
     "pub": "［パブなし］",
     "company": "日和佐ビール(同)",
-    "address": "日本、徳島県海部郡美波町",
-    "lat": 33.7345546,
-    "lng": 134.5355415
+    "address": "日本、〒779-2304 徳島県海部郡美波町日和佐浦184番地3",
+    "lat": 33.7325651,
+    "lng": 134.5375062
   },
   {
     "id": "kamikatzビール",
@@ -351,8 +328,8 @@
     "brand": "PADDLE BREW",
     "pub": "［パブなし］",
     "company": "(株)パドルブリュー",
-    "address": "日本、徳島県美馬市",
-    "lat": 34.0533582,
-    "lng": 134.169914
+    "address": "徳島県美馬市",
+    "lat": 34.0095354,
+    "lng": 134.1455731
   }
 ]
