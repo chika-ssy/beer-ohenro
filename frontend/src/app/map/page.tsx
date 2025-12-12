@@ -12,6 +12,7 @@ type Brewery = {
   lat: number;
   lng: number;
   url?: string;
+  SNS?: string;
 };
 
 const containerStyle = {
@@ -53,28 +54,57 @@ export default function MapPage() {
               position={{ lat: selectedBrewery.lat, lng: selectedBrewery.lng }}
               onCloseClick={() => setSelectedBrewery(null)}
             >
-              <div style={{ padding: '10px' }}>
-                <a 
-                  href={selectedBrewery.url} // URLを設定
-                  target="_blank" // 新しいタブで開く
-                  rel="noopener noreferrer" // セキュリティ対策
-                  style={{
-                      margin: '0 0 8px 0',
-                      fontSize: '16px',
-                      fontWeight: 'bold',
-                      color: '#333',
-                      textDecoration: selectedBrewery.url ? 'underline' : 'none', // URLがあれば下線
-                      cursor: selectedBrewery.url ? 'pointer' : 'default', // URLがあればポインター
-                      display: 'block'
-                    }}>
+              <div style={{ padding: '10px', minWidth: '250px' }}>
+                <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 'bold', color: '#000' }}>
                   {selectedBrewery.brand}
-                </a>
-                <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 500, color: '#333'}}>
+                </h3>
+                <p style={{ margin: '4px 0', fontSize: '14px', color: '#000' }}>
                   <strong>パブ:</strong> {selectedBrewery.pub}
                 </p>
-                <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 500, color: '#333'}}>
-                  <strong>住所:</strong> {selectedBrewery.address}
+                <p style={{ margin: '4px 0 8px 0', fontSize: '13px', color: '#000' }}>
+                  📍 {selectedBrewery.address}
                 </p>
+                
+                <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                  {selectedBrewery.url && (
+                    
+                    <a href={selectedBrewery.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-block',
+                        padding: '6px 12px',
+                        backgroundColor: '#4CAF50',
+                        color: 'white',
+                        textDecoration: 'none',
+                        borderRadius: '4px',
+                        fontSize: '13px',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      🌐 公式サイト
+                    </a>
+                  )}
+                  {selectedBrewery.SNS && (
+                    
+                    <a href={selectedBrewery.SNS}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-block',
+                        padding: '6px 12px',
+                        backgroundColor: '#1DA1F2',
+                        color: 'white',
+                        textDecoration: 'none',
+                        borderRadius: '4px',
+                        fontSize: '13px',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      📱 SNS
+                    </a>
+                  )}
+                </div>
               </div>
             </InfoWindow>
           )}
