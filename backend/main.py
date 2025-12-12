@@ -5,16 +5,10 @@ import json
 
 app = FastAPI()
 
-<<<<<<< HEAD
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-=======
 # フロントエンド（localhost:3000）からのアクセスを許可
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Next.jsのURL
->>>>>>> 69074f77765be510ee85879d4ef2720a10f963de
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -24,7 +18,6 @@ app.add_middleware(
 def get_breweries():
     with open("breweries_with_geo.json", "r", encoding="utf-8") as f:
         breweries = json.load(f)
-<<<<<<< HEAD
     
     # 有効な緯度経度のみをフィルタリング & ユニークキーを生成
     valid_breweries = []
@@ -53,16 +46,6 @@ def get_breweries():
 def read_beers():
     with open("beer_scraper/breweries.json", "r", encoding="utf-8") as json_file:
         beer_data = json.load(json_file)
-=======
-    return breweries
-
-# JSONデータをロード
-with open("beer_scraper/breweries.json", "r", encoding="utf-8") as json_file:
-    beer_data = json.load(json_file)
-
-@app.get("/beers")
-def read_beers():
->>>>>>> 69074f77765be510ee85879d4ef2720a10f963de
     return JSONResponse(content=beer_data)
 
 print("jsonデータを読み込みました。")
