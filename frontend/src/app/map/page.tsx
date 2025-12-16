@@ -169,13 +169,17 @@ export default function MapPage() {
             >
               <div
                 style={{
-                  padding: "22px",
-                  minWidth: "340px",
-                  borderRadius: "18px",
-                  background: "rgba(28, 43, 56, 0.90)",   // 半透明ダーク
+                  padding: "16px", 
+                  minWidth: "280px",
+                  borderRadius: "12 px",
+                  background: "rgba(15, 18, 22, 0.7)",   // 半透明ダーク
+                  border: "1px solid rgba(255, 255, 255, 0.1)", // 枠線
                   backdropFilter: "blur(6px)",            // 背景ぼかし
                   WebkitBackdropFilter: "blur(6px)",
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.4)", // 強めの影
+                  boxShadow: `
+                    0 12px 28px rgba(0, 0, 0, 0.55),
+                    0 0 0 1px rgba(255,255,255,0.04)
+                  `, // 強めの影
                   color: "#ECF0F1",
                 }}
               >
@@ -185,7 +189,7 @@ export default function MapPage() {
                     display: "flex",
                     alignItems: "center",
                     marginBottom: "12px",
-                    borderBottom: "1px solid rgba(255,255,255,0.15)",
+                    borderBottom: "1px solid rgba(255, 255, 255, 0)",
                     paddingBottom: "10px",
                   }}
                 >
@@ -216,8 +220,8 @@ export default function MapPage() {
                 </p>
 
                 {/* ボタンエリア */}
-                <div style={{ marginTop: "18px", display: "flex", flexDirection: "column", gap: "12px" }}>
-
+                <div style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "10px" }}>
+                
                   {/* 現在地からのルート */}
                   {userLocation && getDirectionsUrl(selectedBrewery) && (
                     <button

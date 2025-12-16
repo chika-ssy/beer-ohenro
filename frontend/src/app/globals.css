@@ -24,3 +24,17 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.gm-style .gm-style-iw {
+                  padding: 0 !important;
+                  background: transparent !important;
+                  box-shadow: none !important;
+                  }
+
+                .gm-style .gm-style-iw-d {
+                    overflow: hidden !important;
+                  }
+
+                .gm-style .gm-ui-hover-effect {
+                    filter: invert(1);
+                  }
