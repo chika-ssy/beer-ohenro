@@ -38,3 +38,8 @@ body {
                 .gm-style .gm-ui-hover-effect {
                     filter: invert(1);
                   }
+
+/* Google Maps デフォルトの「✕」ボタンを非表示にする */
+.gm-ui-hover-effect {
+  display: none !important;
+}

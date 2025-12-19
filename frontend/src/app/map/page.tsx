@@ -1,7 +1,5 @@
 'use client';
 
-'use client';
-
 import { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import { 
@@ -9,7 +7,7 @@ import {
   getDistanceToBrewery, 
   formatDistance,
   saveCheckIn,
-  getCheckIns,           // ← これを追加
+  getCheckIns,
   isCheckedIn,
   CHECKIN_RADIUS,
   type Brewery,
@@ -49,7 +47,9 @@ export default function MapPage() {
   const [userLocation, setUserLocation] = useState<UserLocation>(null);
   const [locationError, setLocationError] = useState<string>("");
   const [checkedInBreweries, setCheckedInBreweries] = useState<Set<string>>(new Set());
-
+  const [testMode, setTestMode] = useState(
+    process.env.NEXT_PUBLIC_TEST_MODE === 'true'
+  );
 
   // ブルワリーデータの取得
   useEffect(() => {
@@ -149,9 +149,54 @@ useEffect(() => {
     return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
   };
 
+  // テスト用：任意の位置に移動（開発環境のみ）
+const setTestLocation = (brewery: Brewery) => {
+  if (process.env.NEXT_PUBLIC_TEST_MODE !== 'true') return;
+  
+  // ブルワリーから50m離れた位置に設定
+  const offset = 0.0005; // 約50m
+  setUserLocation({
+    lat: brewery.lat + offset,
+    lng: brewery.lng + offset,
+  });
+  alert(`📍 テストモード：${brewery.brand}の近く（約50m）に移動しました`);
+};
+
   return (
     <div>
-      <h1 style={{ padding: '20px', textAlign: 'center', fontSize:'30px', fontWeight: 'bold' }}>麦酒遍路 - ブルワリーマップ</h1>
+      <h1 style={{ padding: '20px', textAlign: 'center', fontSize:'30px', fontWeight: 'bold' }}>
+  麦酒遍路 - ブルワリーマップ
+</h1>
+
+{/* テストモード切り替え（開発環境のみ） */}
+{process.env.NEXT_PUBLIC_TEST_MODE === 'true' && (
+  <div style={{
+    textAlign: 'center',
+    padding: '10px',
+    backgroundColor: testMode ? '#fff3cd' : '#f8f9fa',
+    borderBottom: '1px solid #ddd'
+  }}>
+    <button
+      onClick={() => setTestMode(!testMode)}
+      style={{
+        padding: '8px 16px',
+        backgroundColor: testMode ? '#ffc107' : '#6c757d',
+        color: 'white',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontWeight: 'bold'
+      }}
+    >
+      {testMode ? '🧪 テストモード ON' : '📍 通常モード'}
+    </button>
+    {testMode && (
+      <p style={{ margin: '8px 0 0 0', fontSize: '13px', color: '#856404' }}>
+        ピンをクリックすると、その近く（50m）に移動します
+      </p>
+    )}
+  </div>
+)}
       
       {locationError && (
         <div style={{ 
@@ -188,7 +233,7 @@ useEffect(() => {
             <Marker
               position={userLocation}
               icon={{
-                path: window.google.maps.SymbolPath.CIRCLE,
+                path: google.maps.SymbolPath.CIRCLE,  // ← window. を削除
                 scale: 8,
                 fillColor: "#4285F4",
                 fillOpacity: 1,
@@ -207,9 +252,15 @@ useEffect(() => {
               <Marker
                 key={brewery.id}
                 position={{ lat: brewery.lat, lng: brewery.lng }}
-                onClick={() => setSelectedBrewery(brewery)}
+                onClick={() => {
+                  // テストモードの場合は位置を移動
+                  if (testMode && process.env.NEXT_PUBLIC_TEST_MODE === 'true') {
+                    setTestLocation(brewery);
+                  }
+                  setSelectedBrewery(brewery);
+                }}
                 icon={isVisited ? {
-                  path: window.google.maps.SymbolPath.CIRCLE,
+                  path: google.maps.SymbolPath.CIRCLE,  // ← window. を削除
                   scale: 10,
                   fillColor: "#27ae60",
                   fillOpacity: 1,
@@ -246,15 +297,40 @@ useEffect(() => {
                   style={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "space-between", // これで両端に配置
                     marginBottom: "12px",
-                    borderBottom: "1px solid rgba(255, 255, 255, 0)",
+                    borderBottom: "1px solid rgba(255, 255, 255, 0.15)", // 枠線を見せるなら透明度を上げる
                     paddingBottom: "10px",
                   }}
                 >
-                  <span style={{ fontSize: "28px", marginRight: "10px" }}>🍺</span>
-                  <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "bold" }}>
-                    {selectedBrewery.brand}
-                  </h2>
+                  {/* 左側：アイコンと名前 */}
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span style={{ fontSize: "28px", marginRight: "10px" }}>🍺</span>
+                    <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "bold" }}>
+                      {selectedBrewery.brand}
+                    </h2>
+                  </div>
+
+                  {/* 右側：自作の✕ボタン */}
+                  <button
+                    onClick={() => setSelectedBrewery(null)} // stateをnullにして閉じる
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#ECF0F1",
+                      fontSize: "20px",
+                      cursor: "pointer",
+                      padding: "5px",
+                      opacity: 0.7,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+                    onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.7")}
+                  >
+                    ✕
+                  </button>
                 </div>
 
                 {/* パブ情報 */}
@@ -299,7 +375,7 @@ useEffect(() => {
                       style={{
                         width: "100%",
                         padding: "8px",
-                        backgroundColor: "#ffef13ff",
+                        backgroundColor: "#66ca23ff",
                         color: "white",
                         border: "none",
                         borderRadius: "6px",
@@ -329,16 +405,16 @@ useEffect(() => {
                     <div style={{
                       width: "100%",
                       padding: "12px",
-                      backgroundColor: "rgba(39, 174, 96, 0.2)",
-                      color: "#27ae60",
-                      border: "2px solid #27ae60",
+                      backgroundColor: "rgba(242, 220, 56, 0.25)",
+                      color: "#ffe139ff",
+                      border: "2px solid #ffb74bff",
                       borderRadius: "6px",
                       fontSize: "15px",
                       fontWeight: "bold",
                       textAlign: "center",
                       marginBottom: "10px",
                     }}>
-                      ✅ チェックイン済み
+                      ✓ チェックイン済み
                     </div>
                   )}
 
