@@ -233,7 +233,7 @@ const setTestLocation = (brewery: Brewery) => {
             <Marker
               position={userLocation}
               icon={{
-                path: google.maps.SymbolPath.CIRCLE,  // ← window. を削除
+                path: google.maps.SymbolPath.CIRCLE,
                 scale: 8,
                 fillColor: "#4285F4",
                 fillOpacity: 1,
@@ -280,7 +280,7 @@ const setTestLocation = (brewery: Brewery) => {
                 style={{
                   padding: "16px", 
                   minWidth: "280px",
-                  borderRadius: "12 px",
+                  borderRadius: "12px",
                   background: "rgba(15, 18, 22, 0.7)",   // 半透明ダーク
                   border: "1px solid rgba(255, 255, 255, 0.1)", // 枠線
                   backdropFilter: "blur(6px)",            // 背景ぼかし

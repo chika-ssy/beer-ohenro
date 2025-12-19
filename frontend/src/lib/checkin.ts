@@ -36,15 +36,20 @@ export function canCheckIn(
 ): boolean {
   if (!user) return false;
 
-  const distance = calcDistance(
-    user.lat,
-    user.lng,
-    brewery.lat,
-    brewery.lng
-  );
+  const distance = getDistanceToBrewery(user, brewery);
+  if (distance === null) return false;
 
+  return canCheckInByDistance(distance);
+}
+
+
+/**
+ * 距離（m）からチェックイン可能か判定
+ */
+export function canCheckInByDistance(distance: number): boolean {
   return distance <= CHECKIN_RADIUS;
 }
+
 
 /**
  * ブルワリーまでの距離を取得
@@ -99,6 +104,17 @@ export function getCheckIns(): CheckInRecord[] {
   const data = localStorage.getItem(key);
   return data ? JSON.parse(data) : [];
 }
+
+/**
+ * チェックイン済みか（キャッシュ用Set版）
+ */
+export function isCheckedInBySet(
+  breweryId: string,
+  checkedInIds: Set<string>
+): boolean {
+  return checkedInIds.has(breweryId);
+}
+
 
 /**
  * 特定のブルワリーにチェックイン済みか確認
