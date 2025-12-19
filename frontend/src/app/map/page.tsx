@@ -1,24 +1,37 @@
 'use client';
 
+'use client';
+
 import { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
+import { 
+  canCheckIn, 
+  getDistanceToBrewery, 
+  formatDistance,
+  saveCheckIn,
+  getCheckIns,           // ← これを追加
+  isCheckedIn,
+  CHECKIN_RADIUS,
+  type Brewery,
+  type UserLocation
+} from "@/lib/checkin";
 
-type Brewery = {
-  id: string;
-  brand: string;
-  pub: string;
-  company: string;
-  address: string;
-  lat: number;
-  lng: number;
-  url?: string;
-  SNS?: string;
-};
+// type Brewery = {
+//   id: string;
+//   brand: string;
+//   pub: string;
+//   company: string;
+//   address: string;
+//   lat: number;
+//   lng: number;
+//   url?: string;
+//   SNS?: string;
+// };
 
-type UserLocation = {
-  lat: number;
-  lng: number;
-} | null;
+// type UserLocation = {
+//   lat: number;
+//   lng: number;
+// } | null;
 
 const containerStyle = {
   width: "100%",
@@ -35,6 +48,7 @@ export default function MapPage() {
   const [selectedBrewery, setSelectedBrewery] = useState<Brewery | null>(null);
   const [userLocation, setUserLocation] = useState<UserLocation>(null);
   const [locationError, setLocationError] = useState<string>("");
+  const [checkedInBreweries, setCheckedInBreweries] = useState<Set<string>>(new Set());
 
 
   // ブルワリーデータの取得
@@ -44,6 +58,13 @@ export default function MapPage() {
       .then((data) => setBreweries(data))
       .catch((err) => console.error("Error fetching breweries:", err));
   }, []);
+
+  // チェックイン履歴を読み込む
+useEffect(() => {
+  const records = getCheckIns();
+  const ids = new Set(records.map(r => r.breweryId));
+  setCheckedInBreweries(ids);
+}, []);
 
   // 現在地の取得
   useEffect(() => {
@@ -91,6 +112,31 @@ export default function MapPage() {
     );
     if (ok) window.open(url, "_blank", "noopener,noreferrer");
   };
+
+  // チェックイン処理
+  const handleCheckIn = (brewery: Brewery) => {
+    if (!userLocation) return;
+
+    const confirmed = window.confirm(
+      `🍺 「${brewery.brand}」にチェックインしますか？\n\nこの記録は端末に保存されます。`
+    );
+
+    if (!confirmed) return;
+
+    // チェックイン記録を保存
+    saveCheckIn({
+      breweryId: brewery.id,
+      breweryName: brewery.brand,
+      timestamp: Date.now(),
+      lat: userLocation.lat,
+      lng: userLocation.lng,
+    });
+
+  // Stateを更新
+  setCheckedInBreweries(prev => new Set(prev).add(brewery.id));
+
+  alert(`✅ チェックイン完了！\n${brewery.brand} への訪問を記録しました。`);
+};
 
   // Google Maps Directionsへのリンクを生成
   const getDirectionsUrl = (brewery: Brewery) => {
@@ -154,13 +200,25 @@ export default function MapPage() {
           )}
 
           {/* ブルワリーのマーカー */}
-          {breweries.map((brewery) => (
-            <Marker
-              key={brewery.id}
-              position={{ lat: brewery.lat, lng: brewery.lng }}
-              onClick={() => setSelectedBrewery(brewery)}
-            />
-          ))}
+          {breweries.map((brewery) => {
+            const isVisited = checkedInBreweries.has(brewery.id);
+            
+            return (
+              <Marker
+                key={brewery.id}
+                position={{ lat: brewery.lat, lng: brewery.lng }}
+                onClick={() => setSelectedBrewery(brewery)}
+                icon={isVisited ? {
+                  path: window.google.maps.SymbolPath.CIRCLE,
+                  scale: 10,
+                  fillColor: "#27ae60",
+                  fillOpacity: 1,
+                  strokeColor: "#ffffff",
+                  strokeWeight: 2,
+                } : undefined}
+              />
+            );
+          })}
 
           {selectedBrewery && (
             <InfoWindow
@@ -222,6 +280,84 @@ export default function MapPage() {
                 {/* ボタンエリア */}
                 <div style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "10px" }}>
                 
+                  {/* 距離表示 */}
+                  {userLocation && (
+                    <div style={{
+                      padding: "8px",
+                      borderRadius: "6px",
+                      marginBottom: "10px",
+                      textAlign: "center",
+                    }}>
+                      📏 現在地から約 {formatDistance(getDistanceToBrewery(userLocation, selectedBrewery) || 0)}
+                    </div>
+                  )}
+
+                  {/* チェックインボタン */}
+                  {userLocation && canCheckIn(userLocation, selectedBrewery) && !checkedInBreweries.has(selectedBrewery.id) && (
+                    <button
+                      onClick={() => handleCheckIn(selectedBrewery)}
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        backgroundColor: "#ffef13ff",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "6px",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "8px",
+                        transition: "0.2s",
+                        marginBottom: "10px",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor = "#2ecc71")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "#27ae60")
+                      }
+                    >
+                      ✅ チェックインする（{CHECKIN_RADIUS}m以内）
+                    </button>
+                  )}
+
+                  {/* チェックイン済み表示 */}
+                  {checkedInBreweries.has(selectedBrewery.id) && (
+                    <div style={{
+                      width: "100%",
+                      padding: "12px",
+                      backgroundColor: "rgba(39, 174, 96, 0.2)",
+                      color: "#27ae60",
+                      border: "2px solid #27ae60",
+                      borderRadius: "6px",
+                      fontSize: "15px",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      marginBottom: "10px",
+                    }}>
+                      ✅ チェックイン済み
+                    </div>
+                  )}
+
+                  {/* 距離が遠い場合 */}
+                  {userLocation && !canCheckIn(userLocation, selectedBrewery) && !checkedInBreweries.has(selectedBrewery.id) && (
+                    <div style={{
+                      width: "100%",
+                      padding: "10px",
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      borderRadius: "6px",
+                      fontSize: "13px",
+                      textAlign: "center",
+                      color: "#bdc3c7",
+                      marginBottom: "10px",
+                    }}>
+                      📍 あと {formatDistance((getDistanceToBrewery(userLocation, selectedBrewery) || 0) - CHECKIN_RADIUS)} 近づくとチェックインできます
+                    </div>
+                  )}
+                      
                   {/* 現在地からのルート */}
                   {userLocation && getDirectionsUrl(selectedBrewery) && (
                     <button
