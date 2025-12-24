@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getCheckIns, type Brewery } from "@/lib/checkin";
+import HamburgerMenu from "@/components/HamburgerMenu";
 
 // ボタンの共通スタイル定義（後で画像に差し替える部分）
 const linkButtonStyle = (isVisited: boolean): React.CSSProperties => ({
@@ -51,6 +52,9 @@ export default function BreweriesPage() {
       minHeight: '100vh',
       fontFamily: '"Noto Serif JP", "Sawarabi Mincho", serif'
     }}>
+      {/* ハンバーガーメニュー */}
+      <HamburgerMenu />
+
       <h1 style={{ 
         textAlign: 'center', 
         fontSize: '28px', 
