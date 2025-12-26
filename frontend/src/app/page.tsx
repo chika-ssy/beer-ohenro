@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import BreweryMap from '@/components/BreweryMap';
 import HamburgerMenu from '@/components/HamburgerMenu';
+import { getCheckIns } from '@/lib/checkin';
 
 type Brewery = {
   name: string;
@@ -20,6 +21,12 @@ type UserLocation = {
 export default function Home() {
   const [breweries, setBreweries] = useState<Brewery[]>([]);
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+  const [checkinCount, setCheckinCount] = useState(0);
+
+useEffect(() => {
+  const records = getCheckIns();
+  setCheckinCount(records.length);
+}, []);
 
   // ブルワリーデータ取得
   useEffect(() => {
@@ -145,18 +152,20 @@ export default function Home() {
           }}
         >
           {[
-            {
-              label: '登録ブルワリー',
-              value: breweries.length,
-              color: '#ff6f2dff',
+            { label: '登録ブルワリー', value: breweries.length, color: '#ff6f2dff' },
+            { label: 'チェックイン数', value: checkinCount, color: '#27ae60' },
+            { 
+              label: '達成率', 
+              value: breweries.length > 0 ? `${Math.round((checkinCount / breweries.length) * 100)}%` : '0%', 
+              color: '#3498db' 
             },
           ].map((s, i) => (
             <div
               key={i}
               style={{
                 background: 'white',
-                padding: '28px',
-                borderRadius: '12px',
+                padding: '18px',
+                borderRadius: '999px',
                 textAlign: 'center',
                 boxShadow:
                   '0 8px 24px rgba(0,0,0,0.08)',
