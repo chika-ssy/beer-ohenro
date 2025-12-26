@@ -241,7 +241,8 @@ export default function Home() {
                 style={{
                   background: '#fafafa',
                   padding: '24px',
-                  borderRadius: '12px',
+                  borderRadius: '999px',
+                  textAlign: 'center',
                 }}
               >
                 <div style={{ fontSize: '28px' }}>
