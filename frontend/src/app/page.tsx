@@ -30,7 +30,9 @@ useEffect(() => {
 
   // ブルワリーデータ取得
   useEffect(() => {
-    fetch('http://localhost:8000/api/breweries')
+    // fetch('http://localhost:8000/api/breweries')
+    // 環境変数に変更
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/breweries`)
       .then(res => res.json())
       .then(data => {
         const valid = data
