@@ -32,10 +32,16 @@ export default function HamburgerMenu() {
       {/* メニュー */}
       <nav className={`${styles.menu} ${isOpen ? styles.active : ''}`}>
         <Link href="/" onClick={closeMenu}>ホーム</Link>
-        <Link href="/about" onClick={closeMenu}>概要</Link>
         <Link href="/map/" onClick={closeMenu}>ブルワリーマップ</Link>
         <Link href="/breweries/" onClick={closeMenu}>麦酒御朱印帳</Link>
-        <Link href="/contact" onClick={closeMenu}>お問い合わせ</Link>
+        <a 
+          href="https://www.instagram.com/beer_ohenro/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          onClick={closeMenu}
+        >
+          お問い合わせ
+        </a>
       </nav>
 
       {/* オーバーレイ（メニュー外をクリックしたら閉じる） */}

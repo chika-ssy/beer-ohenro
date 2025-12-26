@@ -54,7 +54,26 @@ export default function BreweriesPage() {
     }}>
       {/* ハンバーガーメニュー */}
       <HamburgerMenu />
-
+      <h1
+        style={{
+          fontSize: '32px',
+          fontWeight: 700,
+          marginBottom: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '12px',
+        }}
+      >
+        <img 
+          src="/beerHenro_logo.png" 
+          alt="麦酒遍路" 
+          style={{
+            maxWidth: '200px',
+            height: 'auto',
+          }}
+        />
+      </h1>
       <h1 style={{ 
         textAlign: 'center', 
         fontSize: '28px', 
@@ -65,7 +84,7 @@ export default function BreweriesPage() {
         width: '100%',
         paddingBottom: '10px'
       }}>
-        麦酒遍路 御朱印帳
+        御朱印帳
       </h1>
 
       <div style={{ 

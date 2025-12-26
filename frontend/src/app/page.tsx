@@ -80,19 +80,29 @@ useEffect(() => {
           color: 'white',
         }}
       >
-        <h1
-          style={{
-            fontSize: '52px',
-            fontWeight: 700,
-            letterSpacing: '0.04em',
+        <div 
+          style={{ 
             marginBottom: '16px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
-          麦酒遍路
-        </h1>
+          <img 
+            src="/beerHenro_logo.png" 
+            alt="麦酒遍路" 
+            style={{
+              maxWidth: '300px',
+              width: '100%',
+              height: 'auto',
+              display: 'block',
+            }}
+          />
+        </div>
         <p style={{ opacity: 0.9, marginBottom: '32px' }}>
           🍺 四国のクラフトブルワリーを巡る旅
         </p>
+        
 
         <div
           style={{
@@ -311,11 +321,24 @@ useEffect(() => {
         style={{
           padding: '40px 20px',
           textAlign: 'center',
-          color: '#999',
+          color: '#313131ff',
           fontSize: '13px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '12px',
         }}
       >
-        © 2025 麦酒遍路
+        <img 
+          src="/icon_hop.png" 
+          alt="ホップ" 
+          style={{
+            width: '40px',
+            height: '40px',
+            opacity: 0.8,
+          }}
+        />
+        <p style={{ margin: 0 }}>© 2025 麦酒遍路</p>
       </footer>
     </div>
   );
