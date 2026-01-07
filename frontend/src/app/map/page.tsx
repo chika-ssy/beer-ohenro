@@ -174,7 +174,7 @@ export default function MapPage() {
               style={{
                 textAlign: "center",
                 color: "#27ae60",
-                padding: "16px",
+                padding: "12px",
                 marginBottom: "16px",
                 background: "#e8f5e9",
                 borderRadius: "8px",
