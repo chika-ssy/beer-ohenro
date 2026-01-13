@@ -92,22 +92,44 @@ export default function BreweriesPage() {
               
               {/* 上部：スタンプと基本情報 */}
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-                {/* 赤い御朱印スタンプ風アイコン */}
+                {/* 赤い御朱印スタンプ画像 */}
                 <div style={{
-                  minWidth: '60px',
-                  height: '60px',
-                  border: `3px double ${isVisited ? '#b22222' : '#999'}`,
-                  color: isVisited ? '#b22222' : '#999',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '24px',
-                  fontWeight: 'bold',
-                  marginRight: '20px',
-                  borderRadius: '4px',
-                  backgroundColor: isVisited ? 'rgba(178, 34, 34, 0.05)' : 'transparent'
+                minWidth: '70px',
+                height: '70px',
+                marginRight: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
                 }}>
-                  {brewery.brand.substring(0, 1)}
+                {/* チェックイン済みの場合のみ、鮮やかなスタンプを表示 */}
+                <img 
+                    src={brewery.stampUrl || `/stamps/${brewery.id}.png`} // データベースのURLか、ローカルのファイル
+                    alt={`${brewery.brand}の御朱印`}
+                    style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    // 未訪問の場合はここでも薄く・グレーにする演出
+                    filter: isVisited ? 'none' : 'grayscale(100%) opacity(0.2)',
+                    transition: '0.5s ease'
+                    }}
+                />
+                
+                {/* 未訪問の場合に「未」という薄い文字を重ねる（任意） */}
+                {!isVisited && (
+                    <span style={{
+                    position: 'absolute',
+                    fontSize: '12px',
+                    color: '#999',
+                    border: '1px solid #999',
+                    padding: '2px 4px',
+                    borderRadius: '2px',
+                    backgroundColor: 'rgba(255,255,255,0.8)'
+                    }}>
+                    未参拝
+                    </span>
+                )}
                 </div>
 
                 {/* 情報エリア */}
