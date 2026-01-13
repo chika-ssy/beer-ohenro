@@ -1,5 +1,5 @@
 // src/components/BreweryMap.tsx
-import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+import { GoogleMap, Marker } from '@react-google-maps/api';
 import { useMemo } from 'react';
 
 type Brewery = {
