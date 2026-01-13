@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import {
   canCheckIn,
@@ -25,10 +25,6 @@ const center = {
 };
 
 export default function MapPage() {
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-  });
-
   const [breweries, setBreweries] = useState<Brewery[]>([]);
   const [selectedBrewery, setSelectedBrewery] = useState<Brewery | null>(null);
   const [userLocation, setUserLocation] = useState<UserLocation>(null);
@@ -72,7 +68,7 @@ export default function MapPage() {
     if (!userLocation) return;
 
     const ok = window.confirm(
-      `🍺 「${brewery.brand}」にチェックインしますか？\n\nこの記録は端末に保存されます。`
+      `🍺 「${brewery.brand}」にチェックインしますか?\n\nこの記録は端末に保存されます。`
     );
     if (!ok) return;
 
@@ -85,7 +81,7 @@ export default function MapPage() {
     });
 
     setCheckedInBreweries(prev => new Set(prev).add(brewery.id));
-    alert(`✅ チェックイン完了！\n${brewery.brand}`);
+    alert(`✅ チェックイン完了!\n${brewery.brand}`);
   };
 
   const handleDirectionsClick = (brewery: Brewery) => {
@@ -113,14 +109,6 @@ export default function MapPage() {
       lng: brewery.lng + offset,
     });
   };
-
-  if (!isLoaded) {
-    return (
-      <div style={{ textAlign: "center", padding: "40px" }}>
-        マップを読み込んでいます...
-      </div>
-    );
-  }
 
   return (
     <div style={{ minHeight: "100vh", background: "#ffffff", position: "relative" }}>
@@ -201,7 +189,7 @@ export default function MapPage() {
                 <Marker
                   position={userLocation}
                   icon={{
-                    path: window.google.maps.SymbolPath.CIRCLE,
+                    path: google.maps.SymbolPath.CIRCLE,
                     scale: 8,
                     fillColor: "#4285F4",
                     fillOpacity: 1,
@@ -224,7 +212,7 @@ export default function MapPage() {
                     icon={
                       visited
                         ? {
-                            path: window.google.maps.SymbolPath.CIRCLE,
+                            path: google.maps.SymbolPath.CIRCLE,
                             scale: 10,
                             fillColor: "#27ae60",
                             fillOpacity: 1,
@@ -245,7 +233,6 @@ export default function MapPage() {
                   }}
                   onCloseClick={() => setSelectedBrewery(null)}
                 >
-                  {/* 外側のコンテナ: Google標準の×ボタンと重ならないよう、少しだけマージンを設ける */}
                   <div style={{ 
                     padding: "6px 16px", 
                     minWidth: "260px", 
@@ -280,7 +267,6 @@ export default function MapPage() {
                       </div>
                     )}
 
-                    {/* アクションボタン群 */}
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px" }}>
                       
                       {userLocation && canCheckIn(userLocation, selectedBrewery) && !checkedInBreweries.has(selectedBrewery.id) && (
@@ -307,7 +293,6 @@ export default function MapPage() {
                         </button>
                       )}
 
-                      {/* 公式サイト・SNSの横並び */}
                       <div style={{ display: "flex", gap: "8px" }}>
                         {selectedBrewery.url && (
                           <a href={selectedBrewery.url} target="_blank" rel="noopener noreferrer" style={{ flex: 1, padding: "8px", backgroundColor: "#3498DB", color: "white", borderRadius: "6px", textAlign: "center", fontWeight: "bold", textDecoration: "none", fontSize: "12px" }}>
@@ -321,7 +306,6 @@ export default function MapPage() {
                         )}
                       </div>
 
-                      {/* 閉じるボタンを追加 */}
                       <button
                         onClick={() => setSelectedBrewery(null)}
                         style={{ 

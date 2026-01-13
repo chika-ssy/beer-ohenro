@@ -1,5 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
+import GoogleMapsProvider from "@/components/GoogleMapsProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,7 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body>{children}</body>
+      <body>
+        <GoogleMapsProvider>
+          {children}
+        </GoogleMapsProvider>
+      </body>
     </html>
   );
 }

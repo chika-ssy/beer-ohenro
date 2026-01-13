@@ -15,7 +15,7 @@ type UserLocation = {
 
 type Props = {
   breweries: Brewery[];
-  userLocation: UserLocation | null;  // 現在地を取得
+  userLocation: UserLocation | null;
 };
 
 const containerStyle = {
@@ -24,25 +24,12 @@ const containerStyle = {
 };
 
 export default function BreweryMap({ breweries, userLocation }: Props) {
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
-  });
-
   const center = useMemo(() => {
-    return userLocation || { lat: 34.3428, lng: 134.0466 }; // ← 現在地があれば優先(デフォルト:高松市)
+    return userLocation || { lat: 34.3428, lng: 134.0466 };
   }, [userLocation]);
-
-  if (loadError) {
-    return <p>マップの読み込みに失敗しました</p>;
-  }
-
-  if (!isLoaded) {
-    return <p>Loading Map...</p>;
-  }
 
   return (
     <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
-      {/* 現在地マーカー */}
       {userLocation && (
         <Marker
           position={userLocation}
@@ -53,7 +40,6 @@ export default function BreweryMap({ breweries, userLocation }: Props) {
         />
       )}
 
-      {/* ブルワリーマーカー */}
       {breweries.map((brewery, index) => (
         <Marker
           key={`${brewery.name}-${index}`}

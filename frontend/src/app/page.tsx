@@ -23,16 +23,13 @@ export default function Home() {
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [checkinCount, setCheckinCount] = useState(0);
 
-useEffect(() => {
-  const records = getCheckIns();
-  setCheckinCount(records.length);
-}, []);
+  useEffect(() => {
+    const records = getCheckIns();
+    setCheckinCount(records.length);
+  }, []);
 
-  // ブルワリーデータ取得
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/api/breweries`)
-    // 環境変数に変更
-    // fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/breweries`)
       .then(res => res.json())
       .then(data => {
         const valid = data
@@ -49,7 +46,6 @@ useEffect(() => {
       });
   }, []);
 
-  // 現在地取得
   useEffect(() => {
     navigator.geolocation?.getCurrentPosition(pos => {
       setUserLocation({
@@ -105,7 +101,6 @@ useEffect(() => {
           🍺 四国のクラフトブルワリーを巡る旅
         </p>
         
-
         <div
           style={{
             display: 'flex',
