@@ -1,3 +1,4 @@
 #Python
-FastAPI
-Uvicorn
+fastapi
+uvicorn
+python-multipart
