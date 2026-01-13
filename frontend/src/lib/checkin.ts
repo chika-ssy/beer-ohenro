@@ -12,6 +12,7 @@ export type Brewery = {
   lng: number;
   url?: string;
   SNS?: string;
+  stampUrl?: string;
 };
 
 export type UserLocation = {
