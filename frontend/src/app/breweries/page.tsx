@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getCheckIns, type Brewery } from "@/lib/checkin";
+import HamburgerMenu from "@/components/HamburgerMenu";
 
 // ボタンの共通スタイル定義（後で画像に差し替える部分）
 const linkButtonStyle = (isVisited: boolean): React.CSSProperties => ({
@@ -51,6 +52,28 @@ export default function BreweriesPage() {
       minHeight: '100vh',
       fontFamily: '"Noto Serif JP", "Sawarabi Mincho", serif'
     }}>
+      {/* ハンバーガーメニュー */}
+      <HamburgerMenu />
+      <h1
+        style={{
+          fontSize: '32px',
+          fontWeight: 700,
+          marginBottom: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '12px',
+        }}
+      >
+        <img 
+          src="/beerHenro_logo.png" 
+          alt="麦酒遍路" 
+          style={{
+            maxWidth: '200px',
+            height: 'auto',
+          }}
+        />
+      </h1>
       <h1 style={{ 
         textAlign: 'center', 
         fontSize: '28px', 
@@ -61,7 +84,7 @@ export default function BreweriesPage() {
         width: '100%',
         paddingBottom: '10px'
       }}>
-        麦酒遍路 御朱印帳
+        御朱印帳
       </h1>
 
       <div style={{ 
