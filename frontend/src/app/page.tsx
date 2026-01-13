@@ -33,7 +33,7 @@ export default function Home() {
       .then(res => res.json())
       .then(data => {
         const valid = data
-          .map((b: any, i: number) => ({
+          .map((b: { brand?: string; name?: string; lat: number; lng: number }, i: number) => ({
             name: (b.brand || b.name || `不明${i}`) + `_${i}`,
             latitude: Number(b.lat),
             longitude: Number(b.lng),
