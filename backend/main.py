@@ -6,30 +6,24 @@ import os
 
 app = FastAPI()
 
-# フロントエンド（localhost:3000）からのアクセスを許可
+# CORS設定
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "https://beer-ohenro-front.vercel.app/map",
+        "https://beer-ohenro.vercel.app",
+        "https://beer-ohenro-git-main-chika-ssys-projects.vercel.app",  # Vercelの自動生成URL
+        "https://beer-ohenro-chika-ssys-projects.vercel.app",  # 別のVercelのURL
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# CORSの設定
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://your-app-name.vercel.app" # 自分のVercelのURLが決まったら追記
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+@app.get("/")
+def read_root():
+    return {"message": "Beer Ohenro API"}
 
 @app.get("/api/breweries")
 def get_breweries():
