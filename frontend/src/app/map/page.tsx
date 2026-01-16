@@ -35,12 +35,15 @@ export default function MapPage() {
   );
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    fetch(`${apiUrl}/api/breweries`)
-      .then(res => res.json())
-      .then(data => setBreweries(data))
-      .catch(err => console.error("ブルワリーデータの取得に失敗:", err));
-  }, []);
+  // 環境変数を優先し、設定がない場合のみローカルホストを見る
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const fetchUrl = apiUrl ? `${apiUrl}/api/breweries` : "http://localhost:8000/api/breweries";
+  
+  fetch(fetchUrl)
+    .then(res => res.json())
+    .then(data => setBreweries(data))
+    .catch(err => console.error("ブルワリーデータの取得に失敗:", err));
+}, []);
 
   useEffect(() => {
     const records = getCheckIns();
