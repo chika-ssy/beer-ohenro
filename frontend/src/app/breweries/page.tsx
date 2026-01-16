@@ -27,7 +27,8 @@ export default function BreweriesPage() {
 
   useEffect(() => {
     // データ取得
-    fetch("http://localhost:8000/api/breweries")
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    fetch(`${apiUrl}/api/breweries`)
       .then((res) => res.json())
       .then((data) => setBreweries(data))
       .catch((err) => console.error(err));

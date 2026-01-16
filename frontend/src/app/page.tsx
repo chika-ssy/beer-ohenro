@@ -29,7 +29,8 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/breweries`)
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    fetch(`${apiUrl}/api/breweries`)
       .then(res => res.json())
       .then(data => {
         const valid = data
