@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
+import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from "@react-google-maps/api";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import {
   canCheckIn,
@@ -35,7 +35,8 @@ export default function MapPage() {
   );
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/breweries")
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    fetch(`${apiUrl}/api/breweries`)
       .then(res => res.json())
       .then(data => setBreweries(data))
       .catch(err => console.error("ブルワリーデータの取得に失敗:", err));
@@ -189,7 +190,7 @@ export default function MapPage() {
                 <Marker
                   position={userLocation}
                   icon={{
-                    path: google.maps.SymbolPath.CIRCLE,
+                    path: window.google.maps.SymbolPath.CIRCLE,
                     scale: 8,
                     fillColor: "#4285F4",
                     fillOpacity: 1,
@@ -212,7 +213,7 @@ export default function MapPage() {
                     icon={
                       visited
                         ? {
-                            path: google.maps.SymbolPath.CIRCLE,
+                            path: window.google.maps.SymbolPath.CIRCLE,
                             scale: 10,
                             fillColor: "#27ae60",
                             fillOpacity: 1,
