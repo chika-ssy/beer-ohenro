@@ -1,7 +1,7 @@
 // components/HamburgerMenu.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { createBrowserClient } from '@supabase/ssr';
 import styles from './HamburgerMenu.module.css';
@@ -9,26 +9,32 @@ import styles from './HamburgerMenu.module.css';
 export default function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
-  const [mounted, setMounted] = useState(false); // ハイドレーションエラー対策
+  const [mounted, setMounted] = useState(false);
 
-  //ログイン処理
-  // クライアントの初期化（Next.js 15対応）
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  // 環境変数を取得（デバッグ用に一度変数に入れる）
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // クライアントの初期化をメモ化し、値がある時だけ実行する
+  const supabase = useMemo(() => {
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return null; // まだ準備ができていない場合はnullを返す
+    }
+    return createBrowserClient(supabaseUrl, supabaseAnonKey);
+  }, [supabaseUrl, supabaseAnonKey]);
 
   useEffect(() => {
     setMounted(true);
     
-    // 初回マウント時にユーザー取得
+    // supabaseがnullなら何もしない
+    if (!supabase) return;
+
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
     };
     getUser();
 
-    // 状態変化を監視
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
@@ -39,8 +45,12 @@ export default function HamburgerMenu() {
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
-  // Googleログイン処理
+  // Googleサインイン処理
   const handleLogin = async () => {
+    if (!supabase) {
+      alert("認証の準備ができていません。ページをリロードしてください。");
+      return;
+    }
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -49,11 +59,13 @@ export default function HamburgerMenu() {
     });
   };
 
-  // ログアウト処理
+  // サインアウト処理
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    closeMenu();
+    if (supabase) {
+      await supabase.auth.signOut();
+      setUser(null);
+      closeMenu();
+    }
   };
 
   // サーバーサイドレンダリングとの乖離を防ぐ
