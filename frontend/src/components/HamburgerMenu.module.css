@@ -83,3 +83,32 @@
 .menu a:hover {
   background: #555;
 }
+
+.authSection {
+  margin-top: auto; /* メニューの下部に固定 */
+  padding: 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loginButton {
+  background-color: #ff652f; /* Google Blue */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.logoutButton {
+  background: none;
+  border: 1px solid #d4d4d4;
+  padding: 5px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #d4d4d4;
+}
