@@ -67,7 +67,7 @@ export default function BreweryMap({ breweries, userLocation }: any) {
         >
           <div style={{ 
             background: 'white', 
-            padding: '10px', 
+            padding: '15px', 
             minWidth: '160px', 
             position: 'relative' 
           }}>
@@ -77,7 +77,7 @@ export default function BreweryMap({ breweries, userLocation }: any) {
               style={{
                 position: 'absolute',
                 top: '-5px',
-                right: '-5px',
+                right: '-10px',
                 border: 'none',
                 background: 'none',
                 fontSize: '18px',
