@@ -115,7 +115,7 @@ export default function BreweriesPage() {
                 <div style={{ minWidth: '80px', height: '80px', marginRight: '20px', position: 'relative' }}>
                   <img 
                     src={brewery.stampUrl || `/stamps/${brewery.id}.png`}
-                    alt="御朱印"
+                    alt="印"
                     style={{
                       width: '100%', height: '100%', objectFit: 'contain',
                       transition: '0.6s cubic-bezier(0.23, 1, 0.32, 1)',
