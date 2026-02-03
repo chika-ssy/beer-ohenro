@@ -54,8 +54,17 @@ export default function MapPage() {
   }, []);
 
   useEffect(() => {
-    const records = getCheckIns();
-    setCheckedInBreweries(new Set(records.map(r => r.breweryId)));
+    // 非同期でデータを取得するための関数を定義
+    const loadCheckIns = async () => {
+      try {
+        const records = await getCheckIns(); // ここで await を使って完了を待つ
+        setCheckedInBreweries(new Set(records.map(r => r.breweryId)));
+      } catch (err) {
+        console.error("チェックイン履歴の取得に失敗:", err);
+      }
+    };
+
+    loadCheckIns();
   }, []);
 
   useEffect(() => {
@@ -76,24 +85,28 @@ export default function MapPage() {
     );
   }, []);
 
-  const handleCheckIn = (brewery: Brewery) => {
+  const handleCheckIn = async (brewery: Brewery) => { // asyncを追加
     if (!userLocation) return;
 
     const ok = window.confirm(
-      `🍺 「${brewery.brand}」にチェックインしますか?\n\nこの記録は端末に保存されます。`
+      `🍺 「${brewery.brand}」にチェックインしますか?\n\nこの記録はDBに保存されます。`
     );
     if (!ok) return;
 
-    saveCheckIn({
-      breweryId: brewery.id,
-      breweryName: brewery.brand,
-      timestamp: Date.now(),
-      lat: userLocation.lat,
-      lng: userLocation.lng,
-    });
+    try {
+      await saveCheckIn({ // awaitを追加
+        breweryId: brewery.id,
+        breweryName: brewery.brand,
+        timestamp: Date.now(),
+        lat: userLocation.lat,
+        lng: userLocation.lng,
+      });
 
-    setCheckedInBreweries(prev => new Set(prev).add(brewery.id));
-    alert(`✅ チェックイン完了!\n${brewery.brand}`);
+      setCheckedInBreweries(prev => new Set(prev).add(brewery.id));
+      alert(`✅ チェックイン完了!\n${brewery.brand}`);
+    } catch (err) {
+      alert("チェックインに失敗しました。");
+    }
   };
 
   const handleDirectionsClick = (brewery: Brewery) => {
