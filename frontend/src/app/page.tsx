@@ -8,9 +8,12 @@ import HamburgerMenu from '@/components/HamburgerMenu';
 import { getCheckIns } from '@/lib/checkin';
 
 type Brewery = {
+  id?: string; // IDを追加しておくと便利です
   name: string;
   latitude: number;
   longitude: number;
+  url?: string; // 追加
+  sns?: string; // 追加
 };
 
 type UserLocation = {
@@ -39,21 +42,18 @@ export default function Home() {
 
   useEffect(() => {
     fetch('/api/breweries')
-      .then(res => {
-        if (!res.ok) throw new Error('Network response was not ok');
-          return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
         const valid = data
-          .map((b: { brand?: string; name?: string; lat: number; lng: number }, i: number) => ({
-            name: (b.brand || b.name || `不明${i}`) + `_${i}`,
+          .map((b: any, i: number) => ({
+            id: b.id,
+            name: b.brand || b.name || `不明${i}`,
             latitude: Number(b.lat),
             longitude: Number(b.lng),
+            url: b.url,
+            sns: b.sns,
           }))
-          .filter(
-            (b: Brewery) =>
-              !isNaN(b.latitude) && !isNaN(b.longitude)
-          );
+          .filter((b: Brewery) => !isNaN(b.latitude) && !isNaN(b.longitude));
         setBreweries(valid);
       });
   }, []);
