@@ -26,16 +26,28 @@ export default function BreweriesPage() {
   const [checkedInIds, setCheckedInIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    // データ取得
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    fetch(`${apiUrl}/api/breweries`)
-      .then((res) => res.json())
-      .then((data) => setBreweries(data))
-      .catch((err) => console.error(err));
+    // 1. ブルワリー一覧の取得（相対パスに変更 & 数値変換の安全策）
+    fetch('/api/breweries')
+      .then((res) => {
+        if (!res.ok) throw new Error('データ取得に失敗しました');
+        return res.json();
+      })
+      .then((data) => {
+        const formattedData = data.map((b: any) => ({
+          ...b,
+          lat: Number(b.lat),
+          lng: Number(b.lng)
+        }));
+        setBreweries(formattedData);
+      })
+      .catch((err) => console.error("ブルワリーデータの取得に失敗:", err));
 
-    // チェックイン履歴の取得
-    const records = getCheckIns();
-    setCheckedInIds(new Set(records.map(r => r.breweryId)));
+    // 2. チェックイン履歴の取得（async/await に対応）
+    const loadCheckIns = async () => {
+      const records = await getCheckIns(); // await を追加！
+      setCheckedInIds(new Set(records.map(r => r.breweryId)));
+    };
+    loadCheckIns();
   }, []);
 
   // 住所クリック時の処理（Mapページと同じ）
