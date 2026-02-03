@@ -29,9 +29,11 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    fetch(`${apiUrl}/api/breweries`)
-      .then(res => res.json())
+    fetch('/api/breweries')
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+          return res.json();
+      })
       .then(data => {
         const valid = data
           .map((b: { brand?: string; name?: string; lat: number; lng: number }, i: number) => ({
