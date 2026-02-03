@@ -24,8 +24,17 @@ export default function Home() {
   const [checkinCount, setCheckinCount] = useState(0);
 
   useEffect(() => {
-    const records = getCheckIns();
-    setCheckinCount(records.length);
+    // 非同期で取得するための関数を定義
+    const loadCount = async () => {
+      try {
+        const records = await getCheckIns(); // ここで await を使って取得を待つ
+        setCheckinCount(records.length);     // 取得できた配列の件数をセット
+      } catch (err) {
+        console.error("履歴の取得に失敗:", err);
+      }
+    };
+
+    loadCount();
   }, []);
 
   useEffect(() => {
