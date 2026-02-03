@@ -1,21 +1,21 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { getCheckIns, type Brewery } from "@/lib/checkin";
+import { getCheckIns, type Brewery, type CheckInRecord } from "@/lib/checkin"; // CheckInRecordを追加
 import HamburgerMenu from "@/components/HamburgerMenu";
 
-// ボタンの共通スタイル定義（後で画像に差し替える部分）
+// ボタンの共通スタイル定義
 const linkButtonStyle = (isVisited: boolean): React.CSSProperties => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: '36px',  // アイコン画像のサイズに合わせて調整可能
+  width: '36px',
   height: '36px',
   borderRadius: '50%',
   backgroundColor: isVisited ? '#fff' : '#e0e0e0',
   border: `1px solid ${isVisited ? '#b22222' : '#999'}`,
   color: isVisited ? '#b22222' : '#999',
-  fontSize: '16px', // 絵文字のサイズ。画像にする場合は不要
+  fontSize: '16px',
   textDecoration: 'none',
   transition: '0.3s',
   boxShadow: '2px 2px 5px rgba(0,0,0,0.05)',
@@ -23,7 +23,6 @@ const linkButtonStyle = (isVisited: boolean): React.CSSProperties => ({
 
 export default function BreweriesPage() {
   const [breweries, setBreweries] = useState<Brewery[]>([]);
-  // IDをキーにしてレコード丸ごと保存する Map に変更
   const [checkInMap, setCheckInMap] = useState<Map<string, CheckInRecord>>(new Map());
 
   useEffect(() => {
@@ -36,14 +35,12 @@ export default function BreweriesPage() {
     // チェックイン履歴の取得
     const loadCheckIns = async () => {
       const records = await getCheckIns();
-      // Mapオブジェクトを作成 (breweryId => Record)
       const map = new Map(records.map(r => [r.breweryId, r]));
       setCheckInMap(map);
     };
     loadCheckIns();
   }, []);
 
-  // 住所クリック時の処理（Mapページと同じ）
   const handleAddressClick = (address: string) => {
     const confirmed = window.confirm(`Google Mapsで「${address}」を開きますか？`);
     if (!confirmed) return;
@@ -57,52 +54,45 @@ export default function BreweriesPage() {
       backgroundColor: '#f4f1ea',
       minHeight: '100vh',
       fontFamily: '"Noto Serif JP", serif'
-      }}>
-
-      {/* ハンバーガーメニュー */}
+    }}>
       <HamburgerMenu />
-      <h1
-        style={{
-          fontSize: '32px',
-          fontWeight: 700,
-          marginBottom: '16px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '12px',
-        }}
-      >
+      
+      {/* ロゴエリア */}
+      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
         <img 
           src="/beerHenro_logo.png" 
           alt="麦酒遍路" 
-          style={{
-            maxWidth: '200px',
-            height: 'auto',
-          }}
+          style={{ maxWidth: '200px', height: 'auto' }}
         />
-      </h1>
+      </div>
+
       <h1 style={{ 
         textAlign: 'center', 
         fontSize: '28px', 
         marginBottom: '40px',
         color: '#333',
         borderBottom: '2px solid #d4c4a8',
-        display: 'inline-block',
-        width: '100%',
+        display: 'block',
         paddingBottom: '10px'
       }}>
         御朱印帳
       </h1>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
+        gap: '20px', 
+        maxWidth: '1200px', 
+        margin: '0 auto' 
+      }}>
         {breweries.map((brewery) => {
           const record = checkInMap.get(brewery.id);
           const isVisited = !!record;
 
-          // 日付のフォーマット例: 2025年2月3日
+          // 参拝日のフォーマット（令和表記）
           const visitDate = record?.createdAt 
             ? new Date(record.createdAt).toLocaleDateString('ja-JP', {
-                year: 'numeric', month: 'long', day: 'numeric'
+                month: 'long', day: 'numeric'
               })
             : "";
 
@@ -117,7 +107,6 @@ export default function BreweriesPage() {
               flexDirection: 'column',
               position: 'relative',
               transition: '0.3s',
-              // 未訪問時は少し暗く
               filter: isVisited ? 'none' : 'grayscale(60%) opacity(0.8)'
             }}>
               
@@ -129,15 +118,18 @@ export default function BreweriesPage() {
                     alt="御朱印"
                     style={{
                       width: '100%', height: '100%', objectFit: 'contain',
-                      transition: '0.5s ease',
-                      // --- 手押し演出 ---
+                      transition: '0.6s cubic-bezier(0.23, 1, 0.32, 1)',
                       transform: isVisited ? 'rotate(-12deg) scale(1.1)' : 'rotate(0deg)',
-                      opacity: isVisited ? 0.85 : 0.1, // 朱肉の透け感
-                      filter: isVisited ? 'contrast(1.2)' : 'grayscale(100%)',
+                      opacity: isVisited ? 0.85 : 0.1,
+                      filter: isVisited ? 'contrast(1.1) brightness(0.9)' : 'grayscale(100%)',
                     }}
                   />
                   {!isVisited && (
-                    <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '10px', color: '#999', border: '1px solid #999', padding: '2px 4px', whiteSpace: 'nowrap' }}>
+                    <span style={{ 
+                      position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', 
+                      fontSize: '10px', color: '#999', border: '1px solid #999', padding: '2px 4px', 
+                      whiteSpace: 'nowrap', backgroundColor: 'rgba(255,255,255,0.7)' 
+                    }}>
                       未参拝
                     </span>
                   )}
@@ -150,9 +142,9 @@ export default function BreweriesPage() {
                   </h2>
                   {isVisited && (
                     <div>
-                      <span style={{ fontSize: '12px', color: '#b22222', fontWeight: 'bold' }}>● 参拝済み</span>
+                      <span style={{ fontSize: '11px', color: '#b22222', fontWeight: 'bold', display: 'block' }}>● 参拝済み</span>
                       <p style={{ fontSize: '11px', color: '#666', margin: '2px 0 0', fontFamily: 'serif' }}>
-                        令和七年 {visitDate} 参拝
+                        令和八年 {visitDate} 参拝
                       </p>
                     </div>
                   )}
@@ -160,49 +152,39 @@ export default function BreweriesPage() {
               </div>
               
               {/* 下部リンクボタンエリア */}
-              <div style={{ display: 'flex', gap: '15px', marginTop: 'auto', paddingTop: '15px', borderTop: '1px dashed #d4c4a8' }}>
-
-              {/* 下部：リンクボタンエリア（横並び） */}
               <div style={{ 
                 display: 'flex', 
                 gap: '15px', 
-                marginTop: 'auto', // 下揃えにする
-                paddingTop: '15px',
-                borderTop: '1px dashed #d4c4a8' // 区切り線
+                marginTop: 'auto', 
+                paddingTop: '15px', 
+                borderTop: '1px dashed #d4c4a8' 
               }}>
-                
-                {/* 🌐 公式サイトボタン */}
+                {/* 🌐 公式サイト */}
                 {brewery.url ? (
                   <a href={brewery.url} target="_blank" rel="noopener noreferrer"
-                    style={linkButtonStyle(isVisited)}
-                    title="公式サイトへ"
-                  >
+                    style={linkButtonStyle(isVisited)} title="公式サイトへ">
                     <span>🌐</span> 
                   </a>
                 ) : (
-                  <div style={{ ...linkButtonStyle(false), opacity: 0.3, cursor: 'not-allowed' }} title="公式サイトなし">🌐</div>
+                  <div style={{ ...linkButtonStyle(false), opacity: 0.3 }} title="なし">🌐</div>
                 )}
 
-                {/* 📱 SNSボタン */}
+                {/* 📱 SNS */}
                 {brewery.SNS ? (
                   <a href={brewery.SNS} target="_blank" rel="noopener noreferrer"
-                    style={linkButtonStyle(isVisited)}
-                    title="SNSへ"
-                  >
+                    style={linkButtonStyle(isVisited)} title="SNSへ">
                     <span>📱</span>
                   </a>
                 ) : (
-                  <div style={{ ...linkButtonStyle(false), opacity: 0.3, cursor: 'not-allowed' }} title="SNSなし">📱</div>
+                  <div style={{ ...linkButtonStyle(false), opacity: 0.3 }} title="なし">📱</div>
                 )}
 
-                {/* 📍 GoogleMapボタン */}
+                {/* 📍 GoogleMap */}
                 <button onClick={() => handleAddressClick(brewery.address)}
                   style={{...linkButtonStyle(isVisited), cursor: 'pointer'}}
-                  title="Google Mapsで場所を確認"
-                >
+                  title="Google Mapsを確認">
                   <span>📍</span>
                 </button>
-
               </div>
 
             </div>
