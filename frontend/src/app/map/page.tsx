@@ -35,15 +35,23 @@ export default function MapPage() {
   );
 
   useEffect(() => {
-  // 環境変数を優先し、設定がない場合のみローカルホストを見る
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const fetchUrl = apiUrl ? `${apiUrl}/api/breweries` : "http://localhost:8000/api/breweries";
-  
-  fetch(fetchUrl)
-    .then(res => res.json())
-    .then(data => setBreweries(data))
-    .catch(err => console.error("ブルワリーデータの取得に失敗:", err));
-}, []);
+    // 1. fetchのURLを絶対パスから「相対パス」に変更
+    fetch('/api/breweries')
+      .then(res => {
+        if (!res.ok) throw new Error('データ取得に失敗しました');
+        return res.json();
+      })
+      .then(data => {
+        // 2. データの緯度・経度が文字列の場合に備えて数値に変換（安全策）
+        const formattedData = data.map((b: any) => ({
+          ...b,
+          lat: Number(b.lat),
+          lng: Number(b.lng)
+        }));
+        setBreweries(formattedData);
+      })
+      .catch(err => console.error("ブルワリーデータの取得に失敗:", err));
+  }, []);
 
   useEffect(() => {
     const records = getCheckIns();
