@@ -30,28 +30,57 @@ export default function BreweryMap({ breweries, userLocation }: any) {
         <Marker
           key={brewery.name}
           position={{ lat: brewery.latitude, lng: brewery.longitude }}
-          onClick={() => setSelected(brewery)} // クリックで選択
+          onClick={() => setSelected(brewery)}
         />
       ))}
 
       {selected && (
         <InfoWindow
           position={{ lat: selected.latitude, lng: selected.longitude }}
-          onCloseClick={() => setSelected(null)}
+          onCloseClick={() => setSelected(null)} // これがデフォルトの「✕」ボタン
         >
-          <div style={{ padding: '8px', minWidth: '150px', color: '#333' }}>
-            <h3 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'bold' }}>
-              {selected.name.split('_')[0]}
-            </h3>
+          {/* 背景の白さを強調し、余白を整えたコンテナ */}
+          <div style={{ 
+            background: 'white', 
+            padding: '12px', 
+            minWidth: '180px', 
+            borderRadius: '8px',
+            color: '#333'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'flex-start',
+              marginBottom: '10px',
+              borderBottom: '1px solid #f0f0f0',
+              paddingBottom: '6px'
+            }}>
+              <h3 style={{ 
+                margin: 0, 
+                fontSize: '15px', 
+                fontWeight: '700',
+                color: '#2c2c2c'
+              }}>
+                {selected.name.split('_')[0]}
+              </h3>
+              {/* デフォルトの✕ボタンが小さい場合、ここに追加の閉じるボタンを置くことも可能です */}
+            </div>
             
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '8px' }}>
+            <div style={{ 
+              display: 'flex', 
+              gap: '16px', 
+              justifyContent: 'center', 
+              marginTop: '12px' 
+            }}>
               {selected.url && (
-                <a href={selected.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontSize: '20px' }}>
+                <a href={selected.url} target="_blank" rel="noopener noreferrer" 
+                   style={{ textDecoration: 'none', fontSize: '22px' }} title="公式サイト">
                   🌐
                 </a>
               )}
               {selected.sns && (
-                <a href={selected.sns} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontSize: '20px' }}>
+                <a href={selected.sns} target="_blank" rel="noopener noreferrer" 
+                   style={{ textDecoration: 'none', fontSize: '22px' }} title="SNS">
                   📱
                 </a>
               )}
@@ -59,7 +88,8 @@ export default function BreweryMap({ breweries, userLocation }: any) {
                 href={`https://www.google.com/maps/dir/?api=1&destination=${selected.latitude},${selected.longitude}`}
                 target="_blank" 
                 rel="noopener noreferrer" 
-                style={{ textDecoration: 'none', fontSize: '20px' }}
+                style={{ textDecoration: 'none', fontSize: '22px' }}
+                title="経路を調べる"
               >
                 📍
               </a>
