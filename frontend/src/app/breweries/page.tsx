@@ -23,29 +23,22 @@ const linkButtonStyle = (isVisited: boolean): React.CSSProperties => ({
 
 export default function BreweriesPage() {
   const [breweries, setBreweries] = useState<Brewery[]>([]);
-  const [checkedInIds, setCheckedInIds] = useState<Set<string>>(new Set());
+  // IDをキーにしてレコード丸ごと保存する Map に変更
+  const [checkInMap, setCheckInMap] = useState<Map<string, CheckInRecord>>(new Map());
 
   useEffect(() => {
-    // 1. ブルワリー一覧の取得（相対パスに変更 & 数値変換の安全策）
+    // ブルワリー一覧取得
     fetch('/api/breweries')
-      .then((res) => {
-        if (!res.ok) throw new Error('データ取得に失敗しました');
-        return res.json();
-      })
-      .then((data) => {
-        const formattedData = data.map((b: any) => ({
-          ...b,
-          lat: Number(b.lat),
-          lng: Number(b.lng)
-        }));
-        setBreweries(formattedData);
-      })
-      .catch((err) => console.error("ブルワリーデータの取得に失敗:", err));
+      .then((res) => res.json())
+      .then((data) => setBreweries(data))
+      .catch((err) => console.error(err));
 
-    // 2. チェックイン履歴の取得（async/await に対応）
+    // チェックイン履歴の取得
     const loadCheckIns = async () => {
-      const records = await getCheckIns(); // await を追加！
-      setCheckedInIds(new Set(records.map(r => r.breweryId)));
+      const records = await getCheckIns();
+      // Mapオブジェクトを作成 (breweryId => Record)
+      const map = new Map(records.map(r => [r.breweryId, r]));
+      setCheckInMap(map);
     };
     loadCheckIns();
   }, []);
@@ -60,11 +53,12 @@ export default function BreweriesPage() {
 
   return (
     <div style={{ 
-      padding: '40px 20px', 
-      backgroundColor: '#f4f1ea', // 落ち着いた和の背景色
+      padding: '40px 20px',
+      backgroundColor: '#f4f1ea',
       minHeight: '100vh',
-      fontFamily: '"Noto Serif JP", "Sawarabi Mincho", serif'
-    }}>
+      fontFamily: '"Noto Serif JP", serif'
+      }}>
+
       {/* ハンバーガーメニュー */}
       <HamburgerMenu />
       <h1
@@ -100,72 +94,53 @@ export default function BreweriesPage() {
         御朱印帳
       </h1>
 
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
-        gap: '20px',
-        maxWidth: '1200px',
-        margin: '0 auto'
-      }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px', maxWidth: '1200px', margin: '0 auto' }}>
         {breweries.map((brewery) => {
-          const isVisited = checkedInIds.has(brewery.id);
+          const record = checkInMap.get(brewery.id);
+          const isVisited = !!record;
+
+          // 日付のフォーマット例: 2025年2月3日
+          const visitDate = record?.createdAt 
+            ? new Date(record.createdAt).toLocaleDateString('ja-JP', {
+                year: 'numeric', month: 'long', day: 'numeric'
+              })
+            : "";
 
           return (
             <div key={brewery.id} style={{
-              backgroundColor: '#fcfaf2', // 和紙色
+              backgroundColor: '#fcfaf2',
               border: '1px solid #d4c4a8',
               padding: '20px',
               borderRadius: '4px',
               boxShadow: '4px 4px 10px rgba(0,0,0,0.05)',
               display: 'flex',
-              flexDirection: 'column', // 上下に情報を並べる
+              flexDirection: 'column',
               position: 'relative',
-              overflow: 'hidden',
               transition: '0.3s',
-              // 未訪問は全体を少しグレーアウト
-              filter: isVisited ? 'none' : 'grayscale(90%) opacity(0.7)'
+              // 未訪問時は少し暗く
+              filter: isVisited ? 'none' : 'grayscale(60%) opacity(0.8)'
             }}>
               
-              {/* 上部：スタンプと基本情報 */}
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-                {/* 赤い御朱印スタンプ画像 */}
-                <div style={{
-                minWidth: '70px',
-                height: '70px',
-                marginRight: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative',
-                }}>
-                {/* チェックイン済みの場合のみ、鮮やかなスタンプを表示 */}
-                <img 
-                    src={brewery.stampUrl || `/stamps/${brewery.id}.png`} // データベースのURLか、ローカルのファイル
-                    alt={`${brewery.brand}の御朱印`}
+                {/* スタンプエリア */}
+                <div style={{ minWidth: '80px', height: '80px', marginRight: '20px', position: 'relative' }}>
+                  <img 
+                    src={brewery.stampUrl || `/stamps/${brewery.id}.png`}
+                    alt="御朱印"
                     style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                    // 未訪問の場合はここでも薄く・グレーにする演出
-                    filter: isVisited ? 'none' : 'grayscale(100%) opacity(0.2)',
-                    transition: '0.5s ease'
+                      width: '100%', height: '100%', objectFit: 'contain',
+                      transition: '0.5s ease',
+                      // --- 手押し演出 ---
+                      transform: isVisited ? 'rotate(-12deg) scale(1.1)' : 'rotate(0deg)',
+                      opacity: isVisited ? 0.85 : 0.1, // 朱肉の透け感
+                      filter: isVisited ? 'contrast(1.2)' : 'grayscale(100%)',
                     }}
-                />
-                
-                {/* 未訪問の場合に「未」という薄い文字を重ねる（任意） */}
-                {!isVisited && (
-                    <span style={{
-                    position: 'absolute',
-                    fontSize: '12px',
-                    color: '#999',
-                    border: '1px solid #999',
-                    padding: '2px 4px',
-                    borderRadius: '2px',
-                    backgroundColor: 'rgba(255,255,255,0.8)'
-                    }}>
-                    未参拝
+                  />
+                  {!isVisited && (
+                    <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '10px', color: '#999', border: '1px solid #999', padding: '2px 4px', whiteSpace: 'nowrap' }}>
+                      未参拝
                     </span>
-                )}
+                  )}
                 </div>
 
                 {/* 情報エリア */}
@@ -174,12 +149,18 @@ export default function BreweriesPage() {
                     {brewery.brand}
                   </h2>
                   {isVisited && (
-                    <span style={{ fontSize: '11px', color: '#b22222', display: 'block' }}>
-                      ● 参拝済み
-                    </span>
+                    <div>
+                      <span style={{ fontSize: '12px', color: '#b22222', fontWeight: 'bold' }}>● 参拝済み</span>
+                      <p style={{ fontSize: '11px', color: '#666', margin: '2px 0 0', fontFamily: 'serif' }}>
+                        令和七年 {visitDate} 参拝
+                      </p>
+                    </div>
                   )}
                 </div>
               </div>
+              
+              {/* 下部リンクボタンエリア */}
+              <div style={{ display: 'flex', gap: '15px', marginTop: 'auto', paddingTop: '15px', borderTop: '1px dashed #d4c4a8' }}>
 
               {/* 下部：リンクボタンエリア（横並び） */}
               <div style={{ 
