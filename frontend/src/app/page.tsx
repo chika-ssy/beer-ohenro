@@ -305,7 +305,7 @@ export default function Home() {
               marginBottom: '16px',
             }}
           >
-            ブルワリーマップ
+            マップ
           </h2>
           <BreweryMap
             breweries={breweries}
