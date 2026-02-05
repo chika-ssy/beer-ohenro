@@ -48,7 +48,7 @@ export default function BreweryMap({ breweries, userLocation }: any) {
       )}
 
       {/* 🍺 ブルワリーのピン */}
-      {breweries.map((brewery: any) => (
+      {breweries.map((brewery: any, i: number) => (
         <Marker
           key={brewery.id || `brewery-${i}`}
           position={{ lat: brewery.latitude, lng: brewery.longitude }}
