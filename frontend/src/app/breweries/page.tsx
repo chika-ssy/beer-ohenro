@@ -89,12 +89,27 @@ export default function BreweriesPage() {
           const record = checkInMap.get(brewery.id);
           const isVisited = !!record;
 
-          // 参拝日のフォーマット（令和表記）
-          const visitDate = record?.createdAt 
-            ? new Date(record.createdAt).toLocaleDateString('ja-JP', {
-                month: 'long', day: 'numeric'
-              })
-            : "";
+          // 参拝日のフォーマット（令和・漢数字表記）
+          let reiwaDisplay = "";
+          if (record?.createdAt) {
+            const d = new Date(record.createdAt);
+            const westernYear = d.getFullYear();
+            const yearNum = westernYear - 2018; // 令和の計算
+            
+            // 漢数字に変換するための設定
+            const kanjiFormatter = new Intl.DateTimeFormat('ja-JP-u-ca-japanese-nu-hanidec', {
+              month: 'long',
+              day: 'numeric',
+            });
+            
+            // 年の漢数字（1は「元」にする処理）
+            const kanjiYear = yearNum === 1 ? "元" : new Intl.NumberFormat('ja-JP-u-nu-hanidec').format(yearNum);
+            
+            // 月日の漢数字（例：二月五日）
+            const kanjiDate = kanjiFormatter.format(d);
+            
+            reiwaDisplay = `令和${kanjiYear}年 ${kanjiDate}`;
+          }
 
           return (
             <div key={brewery.id} style={{
@@ -114,7 +129,7 @@ export default function BreweriesPage() {
                 {/* スタンプエリア */}
                 <div style={{ minWidth: '80px', height: '80px', marginRight: '20px', position: 'relative' }}>
                   <img 
-                    src={brewery.stampUrl || `/stamps/${brewery.id}.png`}
+                    src={brewery.stampUrl || "/Goshuin.png"}
                     alt="印"
                     style={{
                       width: '100%', height: '100%', objectFit: 'contain',
@@ -142,9 +157,11 @@ export default function BreweriesPage() {
                   </h2>
                   {isVisited && (
                     <div>
-                      <span style={{ fontSize: '11px', color: '#b22222', fontWeight: 'bold', display: 'block' }}>● 参拝済み</span>
+                      <span style={{ fontSize: '11px', color: '#b22222', fontWeight: 'bold', display: 'block' }}>
+                        ● チェックイン済み
+                      </span>
                       <p style={{ fontSize: '11px', color: '#666', margin: '2px 0 0', fontFamily: 'serif' }}>
-                        令和八年 {visitDate} 参拝
+                        {reiwaDisplay} 参拝
                       </p>
                     </div>
                   )}
