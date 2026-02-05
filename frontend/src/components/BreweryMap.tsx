@@ -50,7 +50,7 @@ export default function BreweryMap({ breweries, userLocation }: any) {
       {/* 🍺 ブルワリーのピン */}
       {breweries.map((brewery: any) => (
         <Marker
-          key={brewery.name}
+          key={brewery.id || `brewery-${i}`}
           position={{ lat: brewery.latitude, lng: brewery.longitude }}
           onClick={(e) => {
             // e.stopPropagating() の代わりに、確実にこのピンだけを選択
