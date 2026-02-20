@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import GoogleMapsProvider from "@/components/GoogleMapsProvider";
 import "./globals.css";
+import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "麦酒遍路",
@@ -11,17 +12,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
       <body>
-        <GoogleMapsProvider>
+        <Providers>
           {children}
-        </GoogleMapsProvider>
+        </Providers>
       </body>
     </html>
   );

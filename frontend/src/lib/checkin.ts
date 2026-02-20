@@ -1,5 +1,6 @@
 import { calcDistance } from "./geo";
 import { supabase } from "./supabase";
+import { getSession } from "next-auth/react";
 
 export const CHECKIN_RADIUS = 200; // チェックイン可能距離（メートル）
 
@@ -119,19 +120,27 @@ export function formatDistance(meters: number): string {
 // }
 
 /**
- * チェックイン履歴を Supabase に保存
+ * チェックイン履歴を Supabase に保存（ユーザーID紐付け）
  */
 export async function saveCheckIn(record: CheckInRecord): Promise<void> {
-  // 1. Supabaseの 'checkins' テーブルにデータを挿入
+  const session = await getSession(); // セッションを取得
+  if (!session?.user?.id) {
+    throw new Error("ログインが必要です");
+  }
+
+  // user_id を含めて保存。重複判定(onConflict)は brewery_id と user_id の組み合わせにする
   const { error } = await supabase
     .from('checkins')
     .upsert({
+      user_id: session.user.id, // 自分のIDを追加
       brewery_id: record.breweryId,
       brewery_name: record.breweryName,
       lat: record.lat,
       lng: record.lng,
       created_at: new Date(record.timestamp).toISOString(),
-    }, { onConflict: 'brewery_id' }); // 重複時は上書き
+    }, { 
+      onConflict: 'brewery_id,user_id' // 「このブルワリー×このユーザー」の組み合わせで重複判定
+    });
 
   if (error) {
     console.error("Supabaseへの保存に失敗:", error);
@@ -140,12 +149,16 @@ export async function saveCheckIn(record: CheckInRecord): Promise<void> {
 }
 
 /**
- * チェックイン履歴を Supabase から取得
+ * チェックイン履歴を Supabase から取得（自分の分のみ）
  */
 export async function getCheckIns(): Promise<CheckInRecord[]> {
+  const session = await getSession();
+  if (!session?.user?.id) return [];
+
   const { data, error } = await supabase
     .from('checkins')
-    .select('*');
+    .select('*')
+    .eq('user_id', session.user.id); // 自分のIDでフィルタリング
 
   if (error) {
     console.error("データの取得に失敗:", error);
