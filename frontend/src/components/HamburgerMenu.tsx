@@ -111,7 +111,7 @@ export default function HamburgerMenu() {
               </button>
             </div>
           ) : (
-            <button onClick={handleLogin} className={styles.loginButton}>
+            <button onClick={() => signIn("google", { callbackUrl: "/" })}>
               Googleでログイン
             </button>
           )}
