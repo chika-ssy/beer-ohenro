@@ -6,7 +6,6 @@ import Link from 'next/link';
 import BreweryMap from '@/components/BreweryMap';
 import HamburgerMenu from '@/components/HamburgerMenu';
 import { getCheckIns } from '@/lib/checkin';
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 type Brewery = {
   id?: string; // IDを追加しておくと便利です
