@@ -1,3 +1,4 @@
+// frontend\src\app\api\auth\callback\route.ts
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
