@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Link from 'next/link';
 import { createBrowserClient } from '@supabase/ssr';
 import styles from './HamburgerMenu.module.css';
@@ -112,7 +112,7 @@ export default function HamburgerMenu() {
               </button>
             </div>
           ) : (
-            <button onClick={handleLogin}>
+            <button onClick={() => signIn("google")}>
               Googleでログイン
             </button>
           )}
