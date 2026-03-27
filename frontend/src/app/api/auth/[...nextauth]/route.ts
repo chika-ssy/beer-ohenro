@@ -14,7 +14,6 @@ const handler = NextAuth({
   adapter: SupabaseAdapter({
     url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
     secret: process.env.SUPABASE_SERVICE_ROLE_KEY!, // ここは必ず service_role を使用
-    schema: "public",
   }),
   callbacks: {
     async session({ session, user }) {
