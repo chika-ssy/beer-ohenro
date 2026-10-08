@@ -1,82 +1,39 @@
 // components/HamburgerMenu.tsx
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
-import { signIn } from "next-auth/react";
+import { useState } from 'react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { createBrowserClient } from '@supabase/ssr';
 import styles from './HamburgerMenu.module.css';
 
 export default function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [mounted, setMounted] = useState(false);
 
-  // 環境変数を取得（デバッグ用に一度変数に入れる）
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  // クライアントの初期化をメモ化し、値がある時だけ実行する
-  const supabase = useMemo(() => {
-    if (!supabaseUrl || !supabaseAnonKey) {
-      return null; // まだ準備ができていない場合はnullを返す
-    }
-    return createBrowserClient(supabaseUrl, supabaseAnonKey);
-  }, [supabaseUrl, supabaseAnonKey]);
-
-  useEffect(() => {
-    setMounted(true);
-    
-    // supabaseがnullなら何もしない
-    if (!supabase) return;
-
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUser();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase]);
+  // NextAuthのログイン状態を取得
+  const { data: session, status } = useSession();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
-  // Googleサインイン処理
+  // Googleログイン
   const handleLogin = async () => {
-    if (!supabase) {
-      alert("認証の準備ができていません。ページをリロードしてください。");
-      return;
-    }
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
+    await signIn('google', {
+      callbackUrl: '/',
     });
   };
 
-  // サインアウト処理
+  // ログアウト
   const handleLogout = async () => {
-    if (supabase) {
-      await supabase.auth.signOut();
-      setUser(null);
-      closeMenu();
-    }
+    await signOut({
+      callbackUrl: '/',
+    });
+    closeMenu();
   };
-
-  // サーバーサイドレンダリングとの乖離を防ぐ
-  if (!mounted) return null;
-    
 
   return (
     <>
       {/* ハンバーガーボタン */}
-      <button 
+      <button
         className={`${styles.hamburger} ${isOpen ? styles.active : ''}`}
         onClick={toggleMenu}
         aria-label="メニュー"
@@ -88,12 +45,21 @@ export default function HamburgerMenu() {
 
       {/* メニュー */}
       <nav className={`${styles.menu} ${isOpen ? styles.active : ''}`}>
-        <Link href="/" onClick={closeMenu}>ホーム</Link>
-        <Link href="/map/" onClick={closeMenu}>ブルワリーマップ</Link>
-        <Link href="/breweries/" onClick={closeMenu}>麦酒御朱印帳</Link>
-        <a 
-          href="https://www.instagram.com/beer_ohenro/" 
-          target="_blank" 
+        <Link href="/" onClick={closeMenu}>
+          ホーム
+        </Link>
+
+        <Link href="/map/" onClick={closeMenu}>
+          ブルワリーマップ
+        </Link>
+
+        <Link href="/breweries/" onClick={closeMenu}>
+          麦酒御朱印帳
+        </Link>
+
+        <a
+          href="https://www.instagram.com/beer_ohenro/"
+          target="_blank"
           rel="noopener noreferrer"
           onClick={closeMenu}
         >
@@ -101,29 +67,70 @@ export default function HamburgerMenu() {
         </a>
 
         {/* 認証セクション */}
-        <div className={styles.authSection} style={{ marginTop: 'auto', padding: '20px 0' }}>
-          {user ? (
+        <div
+          className={styles.authSection}
+          style={{ marginTop: 'auto', padding: '20px 0' }}
+        >
+          {status === 'loading' ? (
+            <p>読み込み中...</p>
+          ) : session ? (
             <div className={styles.userInfo}>
-              <p style={{ fontSize: '12px', marginBottom: '8px', color: '#666' }}>
-                {user.email}
+              {/* プロフィール画像 */}
+              {session.user?.image && (
+                <img
+                  src={session.user.image}
+                  alt="プロフィール画像"
+                  width={40}
+                  height={40}
+                  style={{
+                    borderRadius: '50%',
+                    display: 'block',
+                    marginBottom: '8px',
+                  }}
+                />
+              )}
+
+              {/* ユーザー名 */}
+              <p
+                style={{
+                  fontSize: '14px',
+                  marginBottom: '4px',
+                }}
+              >
+                {session.user?.name}
               </p>
-              <button onClick={handleLogout} className={styles.logoutButton}>
+
+              {/* メールアドレス */}
+              <p
+                style={{
+                  fontSize: '12px',
+                  marginBottom: '8px',
+                  color: '#666',
+                }}
+              >
+                {session.user?.email}
+              </p>
+
+              {/* ログアウト */}
+              <button
+                onClick={handleLogout}
+                className={styles.logoutButton}
+              >
                 ログアウト
               </button>
             </div>
           ) : (
-            <button onClick={() => signIn("google")}>
+            <button onClick={handleLogin}>
               Googleでログイン
             </button>
           )}
         </div>
-
       </nav>
 
-      {/* オーバーレイ（メニュー外をクリックしたら閉じる） */}
+      {/* メニュー外をクリックしたら閉じる */}
       {isOpen && (
-        <div 
-          className={styles.overlay} 
+        <div
+          className={styles.overlay}
           onClick={closeMenu}
         />
       )}
