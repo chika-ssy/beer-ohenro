@@ -6,6 +6,7 @@ import Link from 'next/link';
 import BreweryMap from '@/components/BreweryMap';
 import HamburgerMenu from '@/components/HamburgerMenu';
 import { getCheckIns } from '@/lib/checkin';
+import { useSession } from 'next-auth/react';
 
 type Brewery = {
   id?: string; // IDを追加しておくと便利です
@@ -22,23 +23,50 @@ type UserLocation = {
 };
 
 export default function Home() {
+  const { status, data: session } = useSession();
+
   const [breweries, setBreweries] = useState<Brewery[]>([]);
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [checkinCount, setCheckinCount] = useState(0);
 
+
   useEffect(() => {
-    // 非同期で取得するための関数を定義
+    let cancelled = false;
+
     const loadCount = async () => {
+      // ログイン状態を確認している間は待つ
+      if (status === "loading") return;
+
+      // ログアウト中はチェックイン数を0にする
+      if (status !== "authenticated") {
+        setCheckinCount(0);
+        return;
+      }
+
+      // 前のユーザーのチェックイン数をリセット
+      setCheckinCount(0);
+
       try {
-        const records = await getCheckIns(); // ここで await を使って取得を待つ
-        setCheckinCount(records.length);     // 取得できた配列の件数をセット
+        const records = await getCheckIns();
+
+        if (!cancelled) {
+          setCheckinCount(records.length);
+        }
       } catch (err) {
-        console.error("履歴の取得に失敗:", err);
+        if (!cancelled) {
+          console.error("履歴の取得に失敗:", err);
+          setCheckinCount(0);
+        }
       }
     };
 
     loadCount();
-  }, []);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [status, session?.user?.id]);
+
 
   useEffect(() => {
     fetch('/api/breweries')
@@ -90,17 +118,17 @@ export default function Home() {
           color: 'white',
         }}
       >
-        <div 
-          style={{ 
+        <div
+          style={{
             marginBottom: '16px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
           }}
         >
-          <img 
-            src="/beerHenro_logo.png" 
-            alt="麦酒遍路" 
+          <img
+            src="/beerHenro_logo.png"
+            alt="麦酒遍路"
             style={{
               maxWidth: '300px',
               width: '100%',
@@ -112,7 +140,7 @@ export default function Home() {
         <p style={{ opacity: 0.9, marginBottom: '32px' }}>
           🍺 四国のクラフトブルワリーを巡る旅
         </p>
-        
+
         <div
           style={{
             display: 'flex',
@@ -173,10 +201,10 @@ export default function Home() {
           {[
             { label: '登録ブルワリー', value: breweries.length, color: '#ff6f2dff' },
             { label: 'チェックイン数', value: checkinCount, color: '#27ae60' },
-            { 
-              label: '達成率', 
-              value: breweries.length > 0 ? `${Math.round((checkinCount / breweries.length) * 100)}%` : '0%', 
-              color: '#3498db' 
+            {
+              label: '達成率',
+              value: breweries.length > 0 ? `${Math.round((checkinCount / breweries.length) * 100)}%` : '0%',
+              color: '#3498db'
             },
           ].map((s, i) => (
             <div
@@ -338,9 +366,9 @@ export default function Home() {
           gap: '12px',
         }}
       >
-        <img 
-          src="/icon_hop.png" 
-          alt="ホップ" 
+        <img
+          src="/icon_hop.png"
+          alt="ホップ"
           style={{
             width: '40px',
             height: '40px',

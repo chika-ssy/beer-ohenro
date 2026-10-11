@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from "@react-google-maps/api";
 import HamburgerMenu from "@/components/HamburgerMenu";
+import { useSession } from "next-auth/react";
 import {
   canCheckIn,
   getDistanceToBrewery,
@@ -25,6 +26,11 @@ const center = {
 };
 
 export default function MapPage() {
+  const { status, data: session } = useSession();
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+  });
   const [breweries, setBreweries] = useState<Brewery[]>([]);
   const [selectedBrewery, setSelectedBrewery] = useState<Brewery | null>(null);
   const [userLocation, setUserLocation] = useState<UserLocation>(null);
@@ -53,19 +59,44 @@ export default function MapPage() {
       .catch(err => console.error("ブルワリーデータの取得に失敗:", err));
   }, []);
 
+
   useEffect(() => {
-    // 非同期でデータを取得するための関数を定義
+    let cancelled = false;
+
     const loadCheckIns = async () => {
+      if (status === "loading") return;
+
+      // ログアウト中はチェックイン状態をリセット
+      if (status !== "authenticated") {
+        setCheckedInBreweries(new Set());
+        return;
+      }
+
+      // 前のユーザーの履歴をいったん消す
+      setCheckedInBreweries(new Set());
+
       try {
-        const records = await getCheckIns(); // ここで await を使って完了を待つ
-        setCheckedInBreweries(new Set(records.map(r => r.breweryId)));
+        const records = await getCheckIns();
+
+        if (!cancelled) {
+          setCheckedInBreweries(
+            new Set(records.map(r => r.breweryId))
+          );
+        }
       } catch (err) {
-        console.error("チェックイン履歴の取得に失敗:", err);
+        if (!cancelled) {
+          console.error("チェックイン履歴の取得に失敗:", err);
+        }
       }
     };
 
     loadCheckIns();
-  }, []);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [status, session?.user?.id]);
+
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -205,38 +236,43 @@ export default function MapPage() {
               boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
             }}
           >
-            <GoogleMap 
-              mapContainerStyle={containerStyle} 
-              center={center} 
-              zoom={8}
-            >
-              {userLocation && (
-                <Marker
-                  position={userLocation}
-                  icon={{
-                    path: window.google.maps.SymbolPath.CIRCLE,
-                    scale: 8,
-                    fillColor: "#4285F4",
-                    fillOpacity: 1,
-                    strokeColor: "#fff",
-                    strokeWeight: 2,
-                  }}
-                />
-              )}
-
-              {breweries.map(brewery => {
-                const visited = checkedInBreweries.has(brewery.id);
-                return (
+            {loadError ? (
+              <p>Google Mapsの読み込みに失敗しました。</p>
+            ) : !isLoaded ? (
+              <p>地図を読み込み中...</p>
+            ) : (
+              <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={center}
+                zoom={8}
+              >
+                {userLocation && (
                   <Marker
-                    key={brewery.id}
-                    position={{ lat: brewery.lat, lng: brewery.lng }}
-                    onClick={() => {
-                      if (testMode) setTestLocation(brewery);
-                      setSelectedBrewery(brewery);
+                    position={userLocation}
+                    icon={{
+                      path: window.google.maps.SymbolPath.CIRCLE,
+                      scale: 8,
+                      fillColor: "#4285F4",
+                      fillOpacity: 1,
+                      strokeColor: "#fff",
+                      strokeWeight: 2,
                     }}
-                    icon={
-                      visited
-                        ? {
+                  />
+                )}
+
+                {breweries.map(brewery => {
+                  const visited = checkedInBreweries.has(brewery.id);
+                  return (
+                    <Marker
+                      key={brewery.id}
+                      position={{ lat: brewery.lat, lng: brewery.lng }}
+                      onClick={() => {
+                        if (testMode) setTestLocation(brewery);
+                        setSelectedBrewery(brewery);
+                      }}
+                      icon={
+                        visited
+                          ? {
                             path: window.google.maps.SymbolPath.CIRCLE,
                             scale: 10,
                             fillColor: "#27ae60",
@@ -244,114 +280,123 @@ export default function MapPage() {
                             strokeColor: "#fff",
                             strokeWeight: 2,
                           }
-                        : undefined
-                    }
-                  />
-                );
-              })}
+                          : undefined
+                      }
+                    />
+                  );
+                })}
 
-              {selectedBrewery && (
-                <InfoWindow
-                  position={{
-                    lat: selectedBrewery.lat,
-                    lng: selectedBrewery.lng,
-                  }}
-                  onCloseClick={() => setSelectedBrewery(null)}
-                >
-                  <div style={{ 
-                    padding: "6px 16px", 
-                    minWidth: "260px", 
-                    maxWidth: "320px", 
-                    backgroundColor: "#ffffff", 
-                    color: "#2c2c2c",
-                    fontSize: "14px" 
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", marginBottom: "12px", paddingBottom: "12px", borderBottom: "2px solid #f0f0f0" }}>
-                      <span style={{ fontSize: "24px", marginRight: "10px" }}>🍺</span>
-                      <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "bold", color: "#2c2c2c" }}>
-                        {selectedBrewery.brand}
-                      </h3>
-                    </div>
-
-                    {selectedBrewery.pub && (
-                      <p style={{ margin: "6px 0", color: "#666" }}>
-                        <strong>パブ:</strong> {selectedBrewery.pub}
-                      </p>
-                    )}
-
-                    <p style={{ margin: "6px 0" }}>
-                      <span style={{ color: "#ff652f" }}>📍 </span>
-                      <a onClick={() => handleAddressClick(selectedBrewery.address)} style={{ color: "#2196F3", textDecoration: "underline", cursor: "pointer" }}>
-                        {selectedBrewery.address}
-                      </a>
-                    </p>
-
-                    {userLocation && (
-                      <div style={{ padding: "6px", borderRadius: "6px", marginTop: "10px", marginBottom: "10px", background: "#f5f5f5", textAlign: "center", fontSize: "13px", color: "#666" }}>
-                        📏 現在地から約 {formatDistance(getDistanceToBrewery(userLocation, selectedBrewery) || 0)}
+                {selectedBrewery && (
+                  <InfoWindow
+                    position={{
+                      lat: selectedBrewery.lat,
+                      lng: selectedBrewery.lng,
+                    }}
+                    onCloseClick={() => setSelectedBrewery(null)}
+                  >
+                    <div style={{
+                      padding: "6px 16px",
+                      minWidth: "260px",
+                      maxWidth: "320px",
+                      backgroundColor: "#ffffff",
+                      color: "#2c2c2c",
+                      fontSize: "14px"
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", marginBottom: "12px", paddingBottom: "12px", borderBottom: "2px solid #f0f0f0" }}>
+                        <span style={{ fontSize: "24px", marginRight: "10px" }}>🍺</span>
+                        <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "bold", color: "#2c2c2c" }}>
+                          {selectedBrewery.brand}
+                        </h3>
                       </div>
-                    )}
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px" }}>
-                      
-                      {userLocation && canCheckIn(userLocation, selectedBrewery) && !checkedInBreweries.has(selectedBrewery.id) && (
-                        <button
-                          onClick={() => handleCheckIn(selectedBrewery)}
-                          style={{ width: "100%", padding: "10px", backgroundColor: "#27ae60", color: "#ffffff", border: "none", borderRadius: "6px", fontSize: "14px", fontWeight: "bold", cursor: "pointer" }}
-                        >
-                          ✅ チェックインする
-                        </button>
+                      {selectedBrewery.pub && (
+                        <p style={{ margin: "6px 0", color: "#666" }}>
+                          <strong>パブ:</strong> {selectedBrewery.pub}
+                        </p>
                       )}
 
-                      {checkedInBreweries.has(selectedBrewery.id) && (
-                        <div style={{ padding: "10px", backgroundColor: "#e8f5e9", color: "#27ae60", borderRadius: "6px", fontWeight: "bold", textAlign: "center", border: "1px solid #27ae60" }}>
-                          ✓ チェックイン済み
+                      <p style={{ margin: "6px 0" }}>
+                        <span style={{ color: "#ff652f" }}>📍 </span>
+                        <a onClick={() => handleAddressClick(selectedBrewery.address)} style={{ color: "#2196F3", textDecoration: "underline", cursor: "pointer" }}>
+                          {selectedBrewery.address}
+                        </a>
+                      </p>
+
+                      {userLocation && (
+                        <div style={{ padding: "6px", borderRadius: "6px", marginTop: "10px", marginBottom: "10px", background: "#f5f5f5", textAlign: "center", fontSize: "13px", color: "#666" }}>
+                          📏 現在地から約 {formatDistance(getDistanceToBrewery(userLocation, selectedBrewery) || 0)}
                         </div>
                       )}
 
-                      {userLocation && (
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px" }}>
+                        {status === "unauthenticated" && (
+                          <p style={{ color: "#666", textAlign: "center" }}>
+                            🍺 チェックインするにはログインが必要です
+                          </p>
+                        )}
+
+                        {status === "authenticated" &&
+                          userLocation &&
+                          canCheckIn(userLocation, selectedBrewery) &&
+                          !checkedInBreweries.has(selectedBrewery.id) && (
+                            <button
+                              onClick={() => handleCheckIn(selectedBrewery)}
+                              style={{ width: "100%", padding: "10px", backgroundColor: "#27ae60", color: "#ffffff", border: "none", borderRadius: "6px", fontSize: "14px", fontWeight: "bold", cursor: "pointer" }}
+                            >
+                              ✅ チェックインする
+                            </button>
+                          )}
+
+                        {checkedInBreweries.has(selectedBrewery.id) && (
+                          <div style={{ padding: "10px", backgroundColor: "#e8f5e9", color: "#27ae60", borderRadius: "6px", fontWeight: "bold", textAlign: "center", border: "1px solid #27ae60" }}>
+                            ✓ チェックイン済み
+                          </div>
+                        )}
+
+                        {userLocation && (
+                          <button
+                            onClick={() => handleDirectionsClick(selectedBrewery)}
+                            style={{ width: "100%", padding: "10px", backgroundColor: "#ff652f", color: "white", border: "none", borderRadius: "6px", fontSize: "14px", fontWeight: "bold", cursor: "pointer" }}
+                          >
+                            🧭 ルートを表示
+                          </button>
+                        )}
+
+                        <div style={{ display: "flex", gap: "8px" }}>
+                          {selectedBrewery.url && (
+                            <a href={selectedBrewery.url} target="_blank" rel="noopener noreferrer" style={{ flex: 1, padding: "8px", backgroundColor: "#3498DB", color: "white", borderRadius: "6px", textAlign: "center", fontWeight: "bold", textDecoration: "none", fontSize: "12px" }}>
+                              🌐 公式
+                            </a>
+                          )}
+                          {selectedBrewery.SNS && (
+                            <a href={selectedBrewery.SNS} target="_blank" rel="noopener noreferrer" style={{ flex: 1, padding: "8px", backgroundColor: "#1ABC9C", color: "white", borderRadius: "6px", textAlign: "center", fontWeight: "bold", textDecoration: "none", fontSize: "12px" }}>
+                              📱 SNS
+                            </a>
+                          )}
+                        </div>
+
                         <button
-                          onClick={() => handleDirectionsClick(selectedBrewery)}
-                          style={{ width: "100%", padding: "10px", backgroundColor: "#ff652f", color: "white", border: "none", borderRadius: "6px", fontSize: "14px", fontWeight: "bold", cursor: "pointer" }}
+                          onClick={() => setSelectedBrewery(null)}
+                          style={{
+                            marginTop: "4px",
+                            width: "100%",
+                            padding: "8px",
+                            backgroundColor: "#eee",
+                            color: "#666",
+                            border: "none",
+                            borderRadius: "6px",
+                            fontSize: "13px",
+                            cursor: "pointer"
+                          }}
                         >
-                          🧭 ルートを表示
+                          閉じる
                         </button>
-                      )}
-
-                      <div style={{ display: "flex", gap: "8px" }}>
-                        {selectedBrewery.url && (
-                          <a href={selectedBrewery.url} target="_blank" rel="noopener noreferrer" style={{ flex: 1, padding: "8px", backgroundColor: "#3498DB", color: "white", borderRadius: "6px", textAlign: "center", fontWeight: "bold", textDecoration: "none", fontSize: "12px" }}>
-                            🌐 公式
-                          </a>
-                        )}
-                        {selectedBrewery.SNS && (
-                          <a href={selectedBrewery.SNS} target="_blank" rel="noopener noreferrer" style={{ flex: 1, padding: "8px", backgroundColor: "#1ABC9C", color: "white", borderRadius: "6px", textAlign: "center", fontWeight: "bold", textDecoration: "none", fontSize: "12px" }}>
-                            📱 SNS
-                          </a>
-                        )}
                       </div>
-
-                      <button
-                        onClick={() => setSelectedBrewery(null)}
-                        style={{ 
-                          marginTop: "4px",
-                          width: "100%", 
-                          padding: "8px", 
-                          backgroundColor: "#eee", 
-                          color: "#666", 
-                          border: "none", 
-                          borderRadius: "6px", 
-                          fontSize: "13px", 
-                          cursor: "pointer" 
-                        }}
-                      >
-                        閉じる
-                      </button>
                     </div>
-                  </div>
-                </InfoWindow>
-              )}
-            </GoogleMap>
+                  </InfoWindow>
+                )}
+              </GoogleMap>
+            )}
           </div>
         </div>
       </main>

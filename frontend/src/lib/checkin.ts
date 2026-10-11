@@ -1,8 +1,6 @@
 import { calcDistance } from "./geo";
-import { supabase } from "./supabase";
-import { getSession } from "next-auth/react";
 
-export const CHECKIN_RADIUS = 200; // チェックイン可能距離（メートル）
+export const CHECKIN_RADIUS = 200;
 
 export type Brewery = {
   id: string;
@@ -25,15 +23,13 @@ export type UserLocation = {
 export type CheckInRecord = {
   breweryId: string;
   breweryName: string;
-  timestamp: number; // Unix timestamp
+  timestamp: number;
   lat: number;
   lng: number;
   createdAt?: string;
 };
 
-/**
- * チェックイン可能か判定
- */
+// チェックイン可能か判定
 export function canCheckIn(
   user: UserLocation,
   brewery: Brewery
@@ -46,18 +42,12 @@ export function canCheckIn(
   return canCheckInByDistance(distance);
 }
 
-
-/**
- * 距離（m）からチェックイン可能か判定
- */
+// 距離（m）からチェックイン可能か判定
 export function canCheckInByDistance(distance: number): boolean {
   return distance <= CHECKIN_RADIUS;
 }
 
-
-/**
- * ブルワリーまでの距離を取得
- */
+// ブルワリーまでの距離を取得
 export function getDistanceToBrewery(
   user: UserLocation,
   brewery: Brewery
@@ -68,118 +58,94 @@ export function getDistanceToBrewery(
     user.lat,
     user.lng,
     brewery.lat,
-    brewery.lng,
+    brewery.lng
   );
 }
 
-/**
- * 距離を人間が読みやすい形式に変換
- */
+// 距離を読みやすい形式に変換
 export function formatDistance(meters: number): string {
   if (meters < 1000) {
     return `${Math.round(meters)}m`;
-  } else {
-    return `${(meters / 1000).toFixed(1)}km`;
   }
+
+  return `${(meters / 1000).toFixed(1)}km`;
 }
 
-// /**
-//  * チェックイン履歴をlocalStorageに保存
-//  */
-// export function saveCheckIn(record: CheckInRecord): void {
-//   const key = "beer-ohenro-checkins";
-//   const existing = localStorage.getItem(key);
-//   const records: CheckInRecord[] = existing ? JSON.parse(existing) : [];
-  
-//   // 同じブルワリーの既存チェックインを削除
-//   const filtered = records.filter(r => r.breweryId !== record.breweryId);
-  
-//   // 新しいチェックインを追加
-//   filtered.push(record);
-  
-//   localStorage.setItem(key, JSON.stringify(filtered));
-// }
+// APIのエラーを取得する共通処理
+async function throwIfNotOk(response: Response): Promise<void> {
+  if (response.ok) return;
 
-// /**
-//  * チェックイン履歴を取得
-//  */
-// export function getCheckIns(): CheckInRecord[] {
-//   const key = "beer-ohenro-checkins";
-//   const data = localStorage.getItem(key);
-//   return data ? JSON.parse(data) : [];
-// }
+  const result = await response.json().catch(() => null);
 
-// /**
-//  * チェックイン済みか（キャッシュ用Set版）
-//  */
-// export function isCheckedInBySet(
-//   breweryId: string,
-//   checkedInIds: Set<string>
-// ): boolean {
-//   return checkedInIds.has(breweryId);
-// }
+  throw new Error(
+    result?.error || `通信エラーが発生しました (${response.status})`
+  );
+}
 
-/**
- * チェックイン履歴を Supabase に保存（ユーザーID紐付け）
- */
-export async function saveCheckIn(record: CheckInRecord): Promise<void> {
-  const session = await getSession(); // セッションを取得
-  if (!session?.user?.id) {
-    throw new Error("ログインが必要です");
-  }
-
-  // user_id を含めて保存。重複判定(onConflict)は brewery_id と user_id の組み合わせにする
-  const { error } = await supabase
-    .from('checkins')
-    .upsert({
-      user_id: session.user.id, // 自分のIDを追加
-      brewery_id: record.breweryId,
-      brewery_name: record.breweryName,
+// チェックインを保存
+export async function saveCheckIn(
+  record: CheckInRecord
+): Promise<void> {
+  const response = await fetch("/api/checkins", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "same-origin",
+    body: JSON.stringify({
+      breweryId: record.breweryId,
+      breweryName: record.breweryName,
       lat: record.lat,
       lng: record.lng,
-      created_at: new Date(record.timestamp).toISOString(),
-    }, { 
-      onConflict: 'brewery_id,user_id' // 「このブルワリー×このユーザー」の組み合わせで重複判定
-    });
+    }),
+  });
 
-  if (error) {
-    console.error("Supabaseへの保存に失敗:", error);
-    throw error;
-  }
+  await throwIfNotOk(response);
 }
 
-/**
- * チェックイン履歴を Supabase から取得（自分の分のみ）
- */
+// 自分のチェックイン履歴を取得
 export async function getCheckIns(): Promise<CheckInRecord[]> {
-  const session = await getSession();
-  if (!session?.user?.id) return [];
+  const response = await fetch("/api/checkins", {
+    method: "GET",
+    credentials: "same-origin",
+    cache: "no-store",
+  });
 
-  const { data, error } = await supabase
-    .from('checkins')
-    .select('*')
-    .eq('user_id', session.user.id); // 自分のIDでフィルタリング
-
-  if (error) {
-    console.error("データの取得に失敗:", error);
+  if (response.status === 401) {
     return [];
   }
 
-  // データベースの形式をフロント用の形式に変換
-  return data.map(item => ({
-    breweryId: item.brewery_id,
-    breweryName: item.brewery_name,
-    timestamp: new Date(item.created_at).getTime(),
-    lat: item.lat,
-    lng: item.lng,
-    createdAt: item.created_at,
-  }));
+  await throwIfNotOk(response);
+
+  const result = await response.json();
+
+  return result.checkins.map(
+    (item: {
+      brewery_id: string;
+      brewery_name: string;
+      created_at: string | null;
+      lat: number;
+      lng: number;
+    }): CheckInRecord => ({
+      breweryId: item.brewery_id,
+      breweryName: item.brewery_name,
+      timestamp: item.created_at
+        ? new Date(item.created_at).getTime()
+        : 0,
+      lat: item.lat,
+      lng: item.lng,
+      createdAt: item.created_at ?? undefined,
+    })
+  );
 }
 
-/**
- * 特定のブルワリーにチェックイン済みか確認
- */
-export async function isCheckedIn(breweryId: string): Promise<boolean> {
-  const records = await getCheckIns(); // await を追加
-  return records.some(r => r.breweryId === breweryId);
+// 特定のブルワリーにチェックイン済みか確認
+export async function isCheckedIn(
+  breweryId: string
+): Promise<boolean> {
+  const records = await getCheckIns();
+
+  return records.some(
+    (record) => record.breweryId === breweryId
+  );
 }

@@ -96,7 +96,6 @@
   background-color: #ff652f;
   color: white;
   padding: 10px 20px;
-  border-radius: 4px;
   border: none;
   cursor: pointer;
   font-weight: bold;
@@ -108,5 +107,5 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  color: #d4d4d4;
+  color: white;
 }
