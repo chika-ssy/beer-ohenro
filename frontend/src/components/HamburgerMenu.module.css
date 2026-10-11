@@ -5,7 +5,7 @@
   right: 20px;
   width: 50px;
   height: 50px;
-  background: #333;
+  background: #ff652f;
   border: none;
   cursor: pointer;
   z-index: 10002;
@@ -25,7 +25,7 @@
   right: -320px;
   width: 320px;
   height: 100vh;
-  background: #333;
+  background: #ff8f66;
   transition: right 0.3s ease-in-out;
   z-index: 10001;
   padding-top: 100px;
@@ -43,7 +43,7 @@
 }
 
 .hamburger:hover {
-  background: #555;
+  background: #FFA98A;
 }
 
 .hamburger span {
@@ -75,26 +75,25 @@
   color: white;
   text-decoration: none;
   padding: 20px 30px;
-  border-bottom: 1px solid #555;
+  border-bottom: 1px solid #4A3B34;
   transition: background 0.3s;
   font-size: 18px;
 }
 
 .menu a:hover {
-  background: #555;
+  background: #FFA98A;
 }
 
 .authSection {
   margin-top: auto; /* メニューの下部に固定 */
   padding: 20px;
-  border-top: 1px solid #eee;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .loginButton {
-  background-color: #ff652f; /* Google Blue */
+  background-color: #ff652f;
   color: white;
   padding: 10px 20px;
   border-radius: 4px;
@@ -105,7 +104,6 @@
 
 .logoutButton {
   background: none;
-  border: 1px solid #d4d4d4;
   padding: 5px 15px;
   border-radius: 4px;
   cursor: pointer;
