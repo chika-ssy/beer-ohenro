@@ -1,35 +1,17 @@
-// src/app/api/breweries/route.ts
-import { NextResponse } from 'next/server';
-// JSONを直接インポートする（Next.jsがビルド時に最適化してくれます）
-import breweriesData from '@/data/breweries_with_geo.json';
+
+import { NextResponse } from "next/server";
+import { getValidBreweries } from "@/lib/breweries";
 
 export async function GET() {
   try {
-    const seenIds = new Set();
-    
-    // インポートしたデータに対してフィルタリングを行う
-    const validBreweries = breweriesData.filter((brewery: any, i: number) => {
-      const isValidGeo = typeof brewery.lat === 'number' && typeof brewery.lng === 'number';
-      if (!isValidGeo) return false;
-
-      let originalId = brewery.id || `brewery_${i}`;
-      let uniqueId = originalId;
-      let counter = 1;
-      
-      while (seenIds.has(uniqueId)) {
-        uniqueId = `${originalId}_${counter}`;
-        counter++;
-      }
-      
-      seenIds.add(uniqueId);
-      brewery.id = uniqueId;
-      
-      return true;
-    });
-
-    return NextResponse.json(validBreweries);
+    const breweries = getValidBreweries();
+    return NextResponse.json(breweries);
   } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json({ error: 'Failed to process data' }, { status: 500 });
+    console.error("ブルワリー取得エラー:", error);
+
+    return NextResponse.json(
+      { error: "ブルワリー一覧を取得できませんでした" },
+      { status: 500 }
+    );
   }
 }

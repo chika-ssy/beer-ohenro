@@ -1,7 +1,11 @@
+
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { authOptions } from "@/lib/authOptions";
+import { getValidBreweries } from "@/lib/breweries";
+import { calcDistance } from "@/lib/geo";
+import { CHECKIN_RADIUS } from "@/lib/checkin";
 
 export const runtime = "nodejs";
 
@@ -62,6 +66,7 @@ export async function POST(request: Request) {
 
   const { breweryId, breweryName, lat, lng } = body;
 
+  // 入力値の検証
   if (
     typeof breweryId !== "string" ||
     !breweryId.trim() ||
@@ -82,13 +87,40 @@ export async function POST(request: Request) {
     );
   }
 
+  // サーバーが管理するブルワリー情報を取得
+  const breweries = getValidBreweries();
+  const brewery = breweries.find((b) => b.id === breweryId);
+
+  if (!brewery) {
+    return NextResponse.json(
+      { error: "指定されたブルワリーが見つかりません" },
+      { status: 404 }
+    );
+  }
+
+  // ブルワリーの正式な座標との距離を計算
+  const distance = calcDistance(
+    lat,
+    lng,
+    brewery.lat,
+    brewery.lng
+  );
+
+  if (!Number.isFinite(distance) || distance > CHECKIN_RADIUS) {
+    return NextResponse.json(
+      { error: "チェックイン可能な範囲外です" },
+      { status: 403 }
+    );
+  }
+
+  // チェックインを保存
   const { data, error } = await supabaseAdmin
     .from("checkins")
     .upsert(
       {
         user_id: session.user.id,
         brewery_id: breweryId,
-        brewery_name: breweryName,
+        brewery_name: brewery.brand,
         lat,
         lng,
         created_at: new Date().toISOString(),
