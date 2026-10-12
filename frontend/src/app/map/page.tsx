@@ -299,14 +299,19 @@ export default function MapPage() {
                     }}
                     onCloseClick={() => setSelectedBrewery(null)}
                   >
+
                     <div style={{
-                      padding: "6px 16px",
-                      minWidth: "260px",
-                      maxWidth: "320px",
+                      padding: "6px 12px",
+                      width: "300px",
+                      minWidth: 0,
+                      maxWidth: "calc(100vw - 48px)",
+                      boxSizing: "border-box",
+                      overflowWrap: "anywhere",
                       backgroundColor: "#ffffff",
                       color: "#2c2c2c",
                       fontSize: "14px"
                     }}>
+
                       <div style={{ display: "flex", alignItems: "center", marginBottom: "12px", paddingBottom: "12px", borderBottom: "2px solid #f0f0f0" }}>
                         <span style={{ fontSize: "24px", marginRight: "10px" }}>🍺</span>
                         <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "bold", color: "#2c2c2c" }}>
