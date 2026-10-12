@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from "@react-google-maps/api";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import { useSession } from "next-auth/react";
@@ -185,11 +186,15 @@ export default function MapPage() {
             marginBottom: "16px",
           }}
         >
-          <img
-            src="/beerHenro_logo.png"
-            alt="麦酒遍路"
-            style={{ maxWidth: "280px", width: "100%", height: "auto" }}
-          />
+
+          <Link href="/" aria-label="麦酒遍路のホームへ">
+            <img
+              src="/beerHenro_logo.png"
+              alt="麦酒遍路"
+              style={{ maxWidth: "280px", width: "100%", height: "auto" }}
+            />
+          </Link>
+
         </div>
         <p style={{ opacity: 0.9, fontSize: "18px", margin: 0 }}>
           🗺️ ブルワリーマップ

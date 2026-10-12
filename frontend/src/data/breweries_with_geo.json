@@ -193,7 +193,7 @@
     "lat": 34.0660927,
     "lng": 133.0003377,
     "url": "https://imabari-machinaka-bakusyu.com/",
-    "SNS": "https://www.facebook.com/profile.php?id=100038881631845"
+    "SNS": "https://www.instagram.com/imabari_machinaka_bakushu/"
   },
   {
     "id": "道後ビール",
@@ -259,7 +259,7 @@
     "lat": 33.5078345,
     "lng": 132.5479305,
     "url": "https://www.garyu-brewing.com/",
-    "SNS": "https://www.instagram.com/garyu_brewing/"
+    "SNS": "https://www.instagram.com/garyu_brewing_beer/"
   },
   {
     "id": "ｔｏｓａｃｏ",
@@ -304,6 +304,39 @@
     "lng": 133.5883896,
     "url": "https://south-horizon.jp/",
     "SNS": "https://www.instagram.com/south.horizon.brewing/"
+  },
+  {
+    "id": "BRAVE_&_BRAW_Brewpub",
+    "brand": "BRAVE & BRAW Brewpub",
+    "pub": "BRAVE & BRAW Brewpub",
+    "company": "(株)BREWSHIDO",
+    "address": "日本、〒781-2153 高知県高岡郡日高村本郷885番地1",
+    "lat": 33.5342653,
+    "lng": 133.3592133,
+    "url": "https://braveandbraw.com/",
+    "SNS": "https://www.instagram.com/braveandbraw/"
+  },
+  {
+    "id": "PACIFIC_BEER_WORKS",
+    "brand": "PACIFIC BEER WORKS",
+    "pub": "PACIFIC BEER WORKS",
+    "company": "PACIFIC BEER WORKS",
+    "address": "日本、〒789-1911 高知県幡多郡黒潮町浮鞭３５７０−１",
+    "lat": 33.0345426,
+    "lng": 133.0267867,
+    "url": "https://tabelog.com/kochi/A3904/A390401/39009309/?cid=google_yoyaku",
+    "SNS": "https://www.instagram.com/pacific_beer_works"
+  },
+  {
+    "id": "SHIMANTO_Brewing",
+    "brand": "SHIMANTO Brewing",
+    "pub": "SHIMANTO Brewing",
+    "company": "SHIMANTO Brewing",
+    "address": "日本、〒787-0001 高知県四万十市中村本町１丁目２１",
+    "lat": 32.9941202,
+    "lng": 132.931575,
+    "url": "https://shimantobeer.base.shop/",
+    "SNS": "https://www.instagram.com/shimantobrewing"
   },
   {
     "id": "mukai_craft_brewing",
@@ -371,7 +404,7 @@
     "SNS": "https://www.instagram.com/hiwasa_beer/"
   },
   {
-    "id": "kamikatzビール",
+    "id": "kamikatz_brewing_store",
     "brand": "KAMIKATZビール Co.BBQ & General Store",
     "pub": "RISE & WIN Brewing Co.BBQ & General Store",
     "company": "(株)スペック",
@@ -382,7 +415,7 @@
     "SNS": "https://www.facebook.com/profile.php?id=100064036715571#"
   },
   {
-    "id": "kamikatzビール",
+    "id": "kamikatz_brewing_factory2",
     "brand": "KAMIKATZビール Co.第２工場",
     "pub": "RISE & WIN Brewing Co.第２工場ｲﾝﾃﾞｨｺﾞﾀﾜｰ ﾃｲｽﾃｨﾝｸﾞｻﾛﾝ",
     "company": "(株)スペック",

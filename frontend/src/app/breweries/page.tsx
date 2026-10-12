@@ -1,9 +1,17 @@
 'use client';
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { getCheckIns, type Brewery, type CheckInRecord } from "@/lib/checkin"; // CheckInRecordを追加
 import HamburgerMenu from "@/components/HamburgerMenu";
 import { useSession } from "next-auth/react";
+
+// 住所から四国4県の県名を取得
+const getPrefecture = (address: string): string => {
+  const prefectures = ["香川県", "愛媛県", "高知県", "徳島県"];
+
+  return prefectures.find((pref) => address.includes(pref)) ?? "その他";
+};
 
 // ボタンの共通スタイル定義
 const linkButtonStyle = (isVisited: boolean): React.CSSProperties => ({
@@ -83,6 +91,28 @@ export default function BreweriesPage() {
     window.open(`https://www.google.com/maps/search/?api=1&query=${encoded}`, "_blank", "noopener,noreferrer");
   };
 
+
+  // 四国4県の達成状況を集計
+  const prefectures = ["香川県", "愛媛県", "高知県", "徳島県"];
+
+  const prefectureStats = prefectures.map((prefecture) => {
+    // この県にあるブルワリーを抽出
+    const prefectureBreweries = breweries.filter(
+      (brewery) => getPrefecture(brewery.address) === prefecture
+    );
+
+    // この県でチェックイン済みのブルワリー数
+    const visited = prefectureBreweries.filter(
+      (brewery) => checkInMap.has(brewery.id)
+    ).length;
+
+    return {
+      prefecture,
+      total: prefectureBreweries.length,
+      visited,
+    };
+  });
+
   return (
     <div style={{
       padding: '40px 20px',
@@ -94,12 +124,15 @@ export default function BreweriesPage() {
 
       {/* ロゴエリア */}
       <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-        <img
-          src="/beerHenro_logo.png"
-          alt="麦酒遍路"
-          style={{ maxWidth: '200px', height: 'auto' }}
-        />
+        <Link href="/" aria-label="麦酒遍路のホームへ">
+          <img
+            src="/beerHenro_logo.png"
+            alt="麦酒遍路"
+            style={{ maxWidth: '200px', height: 'auto' }}
+          />
+        </Link>
       </div>
+
 
       <h1 style={{
         textAlign: 'center',
@@ -112,6 +145,72 @@ export default function BreweriesPage() {
       }}>
         御朱印帳
       </h1>
+
+      {/* 県別の達成状況 */}
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto 40px',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+        gap: '15px'
+      }}>
+        {prefectureStats.map((stat) => {
+          const percentage = stat.total > 0
+            ? Math.round((stat.visited / stat.total) * 100)
+            : 0;
+
+          return (
+            <div key={stat.prefecture} style={{
+              backgroundColor: '#fcfaf2',
+              border: '1px solid #d4c4a8',
+              borderRadius: '4px',
+              padding: '20px'
+            }}>
+              <h2 style={{
+                fontSize: '18px',
+                color: '#333',
+                margin: '0 0 10px'
+              }}>
+                {stat.prefecture}
+              </h2>
+
+              <p style={{
+                color: '#b22222',
+                fontSize: '20px',
+                fontWeight: 'bold',
+                margin: '0 0 10px'
+              }}>
+                {stat.visited} / {stat.total} 箇所
+              </p>
+
+              {/* 達成率のバー */}
+              <div style={{
+                height: '10px',
+                backgroundColor: '#e0e0e0',
+                borderRadius: '5px',
+                overflow: 'hidden'
+              }}>
+                <div style={{
+                  width: `${percentage}%`,
+                  height: '100%',
+                  backgroundColor: '#b22222',
+                  transition: 'width 0.3s'
+                }} />
+              </div>
+
+              <p style={{
+                textAlign: 'right',
+                fontSize: '12px',
+                color: '#666',
+                margin: '8px 0 0'
+              }}>
+                達成率 {percentage}%
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
 
       <div style={{
         display: 'grid',

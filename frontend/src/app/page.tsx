@@ -118,6 +118,7 @@ export default function Home() {
           color: 'white',
         }}
       >
+
         <div
           style={{
             marginBottom: '16px',
@@ -126,17 +127,20 @@ export default function Home() {
             alignItems: 'center',
           }}
         >
-          <img
-            src="/beerHenro_logo.png"
-            alt="麦酒遍路"
-            style={{
-              maxWidth: '300px',
-              width: '100%',
-              height: 'auto',
-              display: 'block',
-            }}
-          />
+          <Link href="/" aria-label="麦酒遍路のホームへ">
+            <img
+              src="/beerHenro_logo.png"
+              alt="麦酒遍路"
+              style={{
+                maxWidth: '300px',
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+              }}
+            />
+          </Link>
         </div>
+
         <p style={{ opacity: 0.9, marginBottom: '32px' }}>
           🍺 四国のクラフトブルワリーを巡る旅
         </p>

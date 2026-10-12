@@ -113,7 +113,7 @@ export async function POST(request: Request) {
     );
   }
 
-  // チェックインを保存
+  // チェックインを保存（既存の記録は上書きしない）
   const { data, error } = await supabaseAdmin
     .from("checkins")
     .upsert(
@@ -125,10 +125,12 @@ export async function POST(request: Request) {
         lng,
         created_at: new Date().toISOString(),
       },
-      { onConflict: "user_id,brewery_id" }
+      {
+        onConflict: "user_id,brewery_id",
+        ignoreDuplicates: true,
+      }
     )
-    .select()
-    .single();
+    .select();
 
   if (error) {
     console.error("チェックイン保存エラー:", error);
@@ -138,5 +140,31 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ checkin: data });
+  // 重複時は既存の記録を取得する
+  if (!data || data.length === 0) {
+    const { data: existing, error: existingError } =
+      await supabaseAdmin
+        .from("checkins")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .eq("brewery_id", breweryId)
+        .single();
+
+    if (existingError || !existing) {
+      return NextResponse.json(
+        { error: "チェックイン履歴を取得できませんでした" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      checkin: existing,
+      alreadyCheckedIn: true,
+    });
+  }
+
+  return NextResponse.json({
+    checkin: data[0],
+    alreadyCheckedIn: false,
+  });
 }
