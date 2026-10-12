@@ -306,7 +306,7 @@ export default function MapPage() {
 
 
                     <div style={{
-                      width: "min(500px, calc(100vw - 30px))",
+                      width: "min(400px, calc(100vw - 30px))",
                       minWidth: 0,
                       maxWidth: "100%",
                       boxSizing: "border-box",
