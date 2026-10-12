@@ -291,26 +291,33 @@ export default function MapPage() {
                   );
                 })}
 
+
                 {selectedBrewery && (
                   <InfoWindow
                     position={{
                       lat: selectedBrewery.lat,
                       lng: selectedBrewery.lng,
                     }}
+                    options={{
+                      maxWidth: 400,
+                    }}
                     onCloseClick={() => setSelectedBrewery(null)}
                   >
 
+
                     <div style={{
-                      padding: "6px 12px",
-                      width: "300px",
+                      width: "min(380px, calc(100vw - 50px))",
                       minWidth: 0,
-                      maxWidth: "calc(100vw - 48px)",
+                      maxWidth: "100%",
                       boxSizing: "border-box",
+                      padding: "6px 10px",
                       overflowWrap: "anywhere",
                       backgroundColor: "#ffffff",
                       color: "#2c2c2c",
                       fontSize: "14px"
                     }}>
+
+
 
                       <div style={{ display: "flex", alignItems: "center", marginBottom: "12px", paddingBottom: "12px", borderBottom: "2px solid #f0f0f0" }}>
                         <span style={{ fontSize: "24px", marginRight: "10px" }}>🍺</span>
@@ -366,7 +373,21 @@ export default function MapPage() {
                         {userLocation && (
                           <button
                             onClick={() => handleDirectionsClick(selectedBrewery)}
-                            style={{ width: "100%", padding: "10px", backgroundColor: "#ff652f", color: "white", border: "none", borderRadius: "6px", fontSize: "14px", fontWeight: "bold", cursor: "pointer" }}
+
+                            style={{
+                              width: "100%",
+                              maxWidth: "100%",
+                              boxSizing: "border-box",
+                              padding: "10px",
+                              backgroundColor: "#ff652f",
+                              color: "white",
+                              border: "none",
+                              borderRadius: "6px",
+                              fontSize: "14px",
+                              fontWeight: "bold",
+                              cursor: "pointer"
+                            }}
+
                           >
                             🧭 ルートを表示
                           </button>
@@ -374,12 +395,18 @@ export default function MapPage() {
 
                         <div style={{ display: "flex", gap: "8px" }}>
                           {selectedBrewery.url && (
-                            <a href={selectedBrewery.url} target="_blank" rel="noopener noreferrer" style={{ flex: 1, padding: "8px", backgroundColor: "#3498DB", color: "white", borderRadius: "6px", textAlign: "center", fontWeight: "bold", textDecoration: "none", fontSize: "12px" }}>
+                            <a href={selectedBrewery.url} target="_blank" rel="noopener noreferrer" style={{
+                              flex: 1, padding: "8px", backgroundColor: "#3498DB", color: "white", borderRadius: "6px", textAlign: "center", fontWeight: "bold", textDecoration: "none", fontSize: "12px", minWidth: 0,
+                              boxSizing: "border-box",
+                            }}>
                               🌐 公式
                             </a>
                           )}
                           {selectedBrewery.SNS && (
-                            <a href={selectedBrewery.SNS} target="_blank" rel="noopener noreferrer" style={{ flex: 1, padding: "8px", backgroundColor: "#1ABC9C", color: "white", borderRadius: "6px", textAlign: "center", fontWeight: "bold", textDecoration: "none", fontSize: "12px" }}>
+                            <a href={selectedBrewery.SNS} target="_blank" rel="noopener noreferrer" style={{
+                              flex: 1, padding: "8px", backgroundColor: "#1ABC9C", color: "white", borderRadius: "6px", textAlign: "center", fontWeight: "bold", textDecoration: "none", fontSize: "12px", minWidth: 0,
+                              boxSizing: "border-box",
+                            }}>
                               📱 SNS
                             </a>
                           )}
@@ -409,7 +436,7 @@ export default function MapPage() {
             )}
           </div>
         </div>
-      </main>
+      </main >
 
       <footer
         style={{
@@ -434,6 +461,6 @@ export default function MapPage() {
         />
         <p style={{ margin: 0 }}>© 2025 麦酒遍路</p>
       </footer>
-    </div>
+    </div >
   );
 }
