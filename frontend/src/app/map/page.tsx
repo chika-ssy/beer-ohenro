@@ -236,7 +236,7 @@ export default function MapPage() {
           <div
             style={{
               background: "white",
-              padding: "24px",
+              padding: "12px",
               borderRadius: "12px",
               boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
             }}
