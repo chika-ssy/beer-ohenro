@@ -306,7 +306,7 @@ export default function MapPage() {
 
 
                     <div style={{
-                      width: "min(380px, calc(100vw - 50px))",
+                      width: "min(500px, calc(100vw - 30px))",
                       minWidth: 0,
                       maxWidth: "100%",
                       boxSizing: "border-box",
@@ -346,11 +346,20 @@ export default function MapPage() {
                       )}
 
                       <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px" }}>
+
                         {status === "unauthenticated" && (
-                          <p style={{ color: "#666", textAlign: "center" }}>
-                            🍺 チェックインするにはログインが必要です
+                          <p style={{
+                            color: "#666",
+                            textAlign: "center",
+                            lineHeight: "1.6"
+                          }}>
+                            🍺 チェックインするには
+                            <span style={{ whiteSpace: "nowrap" }}>
+                              ログインが必要です
+                            </span>
                           </p>
                         )}
+
 
                         {status === "authenticated" &&
                           userLocation &&
